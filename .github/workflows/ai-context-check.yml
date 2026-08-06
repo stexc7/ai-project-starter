@@ -1,0 +1,132 @@
+name: AI Context Check
+
+# Verifica que la estructura de contexto para IAs sigue completa.
+# Este workflow funciona tal cual, sin configuración: solo comprueba archivos.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  context:
+    name: Verificar contexto de IA
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # ── Bloqueante: sin estos archivos, las IAs trabajan a ciegas ──
+      - name: Archivos de contexto obligatorios
+        shell: bash
+        run: |
+          set -euo pipefail
+          required=(
+            "AGENTS.md"
+            "CLAUDE.md"
+            ".ai/PROJECT.md"
+            ".ai/RULES.md"
+            ".ai/ARCHITECTURE.md"
+            ".ai/STACK.md"
+            ".ai/GLOSSARY.md"
+            ".ai/CURRENT_TASK.md"
+            ".ai/TASKS.md"
+            ".ai/BUGS.md"
+            ".ai/TESTING.md"
+            ".ai/SECURITY.md"
+            ".ai/DECISIONS.md"
+            ".ai/CHANGELOG.md"
+            ".ai/AI_MEMORY.md"
+            "docs/standards/DEFINITION_OF_DONE.md"
+            "docs/standards/CODE_STANDARDS.md"
+            "docs/adr/README.md"
+          )
+          missing=0
+          for f in "${required[@]}"; do
+            if [ ! -f "$f" ]; then
+              echo "::error file=$f::Falta un archivo de contexto obligatorio: $f"
+              missing=1
+            fi
+          done
+          if [ "$missing" -ne 0 ]; then
+            echo "Faltan archivos de contexto. Las IAs trabajarán a ciegas sin ellos."
+            exit 1
+          fi
+          echo "Todos los archivos de contexto están presentes."
+
+      # ── Bloqueante: un secreto en el repositorio es un incidente ──
+      - name: Secretos evidentes en el repositorio
+        shell: bash
+        run: |
+          set -uo pipefail
+          found=0
+
+          if git ls-files --error-unmatch .env >/dev/null 2>&1; then
+            echo "::error file=.env::.env está versionado. Sácalo del repositorio y ROTA las credenciales."
+            found=1
+          fi
+
+          # Búsqueda superficial. No sustituye a un escáner real (ver security.yml).
+          patterns='(-----BEGIN (RSA|OPENSSH|DSA|EC|PGP) PRIVATE KEY-----|AKIA[0-9A-Z]{16}|ghp_[A-Za-z0-9]{36}|sk-[A-Za-z0-9]{32,})'
+          while IFS= read -r file; do
+            [ -f "$file" ] || continue
+            if grep -qE "$patterns" "$file" 2>/dev/null; then
+              echo "::error file=$file::Posible secreto detectado en $file"
+              found=1
+            fi
+          done < <(git ls-files | grep -vE '\.(png|jpg|jpeg|gif|pdf|zip|lock)$' || true)
+
+          if [ "$found" -ne 0 ]; then
+            exit 1
+          fi
+          echo "Sin secretos evidentes."
+
+      # ── Informativo: avisa, nunca bloquea ──
+      - name: Enlaces internos rotos en la documentación
+        shell: bash
+        continue-on-error: true
+        run: |
+          set -uo pipefail
+          total=0
+          while IFS= read -r file; do
+            dir=$(dirname "$file")
+            links=$(grep -oE '\]\([^)#: ]+\.md' "$file" 2>/dev/null | sed -E 's/^\]\(//' || true)
+            for link in $links; do
+              case "$link" in
+                http*|/*) continue ;;
+              esac
+              if [ ! -f "$dir/$link" ]; then
+                echo "::warning file=$file::Enlace roto: $link"
+                total=$((total + 1))
+              fi
+            done
+          done < <(find . -name '*.md' -not -path './.git/*')
+          echo "Enlaces rotos encontrados: $total"
+
+      - name: Plantillas sin rellenar
+        shell: bash
+        continue-on-error: true
+        run: |
+          set -uo pipefail
+          if grep -q 'TASK-000' .ai/CURRENT_TASK.md 2>/dev/null; then
+            echo "::warning file=.ai/CURRENT_TASK.md::CURRENT_TASK.md sigue con la plantilla sin rellenar (TASK-000)."
+          fi
+          if grep -q '<nombre del proyecto>' .ai/PROJECT.md 2>/dev/null; then
+            echo "::warning file=.ai/PROJECT.md::PROJECT.md sigue sin rellenar. Es el archivo del que depende todo lo demás."
+          fi
+          echo "Revisión de plantillas terminada."
+
+      - name: Tamaño de AI_MEMORY.md
+        shell: bash
+        continue-on-error: true
+        run: |
+          set -uo pipefail
+          lines=$(wc -l < .ai/AI_MEMORY.md)
+          echo "AI_MEMORY.md: $lines líneas"
+          if [ "$lines" -gt 200 ]; then
+            echo "::warning file=.ai/AI_MEMORY.md::AI_MEMORY.md supera las 200 líneas. Toca consolidar: fusiona entradas repetidas y borra lo que ya no aplica."
+          fi

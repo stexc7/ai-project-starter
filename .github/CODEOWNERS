@@ -1,0 +1,37 @@
+# CODEOWNERS
+#
+# Quién revisa qué. GitHub asigna estos revisores automáticamente en cada PR.
+# La ÚLTIMA regla que coincide con un archivo es la que manda.
+#
+# Sustituye @OWNER por tu usuario u organización antes de usarlo.
+
+# Por defecto
+*                           @OWNER
+
+# ── Contexto de IA ──
+# Cambiar las reglas afecta a cómo trabajan las tres IAs. Merece revisión.
+/AGENTS.md                  @OWNER
+/CLAUDE.md                  @OWNER
+/.ai/RULES.md               @OWNER
+/.ai/SECURITY.md            @OWNER
+/.agents/                   @OWNER
+/.prompts/                  @OWNER
+
+# ── Estándares y proceso ──
+/docs/standards/            @OWNER
+/docs/adr/                  @OWNER
+
+# ── Infraestructura ──
+/.github/                   @OWNER
+/.github/workflows/         @OWNER
+/scripts/                   @OWNER
+
+# ── Código ──
+# /backend/                 @OWNER
+# /frontend/                @OWNER
+# /backend/src/domain/      @OWNER
+
+# ── Archivos sensibles ──
+/LICENSE                    @OWNER
+/SECURITY.md                @OWNER
+/.gitignore                 @OWNER

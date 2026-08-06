@@ -1,0 +1,60 @@
+# Normaliza los finales de línea. Sin esto, un clon en Windows con
+# core.autocrlf=true convierte a CRLF y rompe:
+#   - los scripts .sh en Linux ("bad interpreter: no such file or directory")
+#   - los bloques `run: |` de GitHub Actions (bash falla con los \r)
+
+# Por defecto: Git detecta si es texto y normaliza a LF en el repositorio.
+* text=auto eol=lf
+
+# ── Siempre LF, sin excepción ──
+*.sh            text eol=lf
+*.bash          text eol=lf
+*.yml           text eol=lf
+*.yaml          text eol=lf
+*.md            text eol=lf
+*.json          text eol=lf
+*.toml          text eol=lf
+Dockerfile      text eol=lf
+Makefile        text eol=lf
+.gitattributes  text eol=lf
+.gitignore      text eol=lf
+.editorconfig   text eol=lf
+
+# ── Siempre CRLF (Windows los necesita) ──
+*.ps1           text eol=crlf
+*.psm1          text eol=crlf
+*.psd1          text eol=crlf
+*.bat           text eol=crlf
+*.cmd           text eol=crlf
+*.sln           text eol=crlf
+
+# ── Binarios: Git no los toca ──
+*.png           binary
+*.jpg           binary
+*.jpeg          binary
+*.gif           binary
+*.ico           binary
+*.webp          binary
+*.pdf           binary
+*.zip           binary
+*.gz            binary
+*.woff          binary
+*.woff2         binary
+*.ttf           binary
+*.otf           binary
+*.mp4           binary
+*.xlsx          binary
+*.docx          binary
+
+# ── Lockfiles: se versionan, pero no ensucian los diffs ──
+package-lock.json   -diff linguist-generated
+yarn.lock           -diff linguist-generated
+pnpm-lock.yaml      -diff linguist-generated
+poetry.lock         -diff linguist-generated
+Cargo.lock          -diff linguist-generated
+
+# ── Estadísticas de lenguaje de GitHub ──
+docs/**         linguist-documentation
+.ai/**          linguist-documentation
+.agents/**      linguist-documentation
+.prompts/**     linguist-documentation

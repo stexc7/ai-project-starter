@@ -1,0 +1,61 @@
+version: 2
+
+updates:
+  # GitHub Actions — siempre aplica, sea cual sea el stack.
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "ci"
+    labels:
+      - "dependencies"
+
+  # ── Descomenta el ecosistema de tu proyecto ──
+
+  # - package-ecosystem: "npm"
+  #   directory: "/"
+  #   schedule:
+  #     interval: "weekly"
+  #     day: "monday"
+  #   open-pull-requests-limit: 10
+  #   commit-message:
+  #     prefix: "chore"
+  #     prefix-development: "chore"
+  #   labels:
+  #     - "dependencies"
+  #   groups:
+  #     # Agrupa las menores para no recibir 20 PRs cada lunes.
+  #     minor-and-patch:
+  #       update-types:
+  #         - "minor"
+  #         - "patch"
+
+  # - package-ecosystem: "pip"
+  #   directory: "/"
+  #   schedule:
+  #     interval: "weekly"
+  #   commit-message:
+  #     prefix: "chore"
+  #   labels:
+  #     - "dependencies"
+
+  # - package-ecosystem: "nuget"
+  #   directory: "/"
+  #   schedule:
+  #     interval: "weekly"
+  #   commit-message:
+  #     prefix: "chore"
+  #   labels:
+  #     - "dependencies"
+
+  # - package-ecosystem: "docker"
+  #   directory: "/"
+  #   schedule:
+  #     interval: "weekly"
+  #   commit-message:
+  #     prefix: "build"
+  #   labels:
+  #     - "dependencies"

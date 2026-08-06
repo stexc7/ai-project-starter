@@ -1,0 +1,177 @@
+# ─────────────────────────────────────────────────────────────
+# Secretos — LO MÁS IMPORTANTE DE ESTE ARCHIVO
+# ─────────────────────────────────────────────────────────────
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+*.crt
+secrets.json
+credentials.json
+appsettings.Development.json
+appsettings.Production.json
+
+# ─────────────────────────────────────────────────────────────
+# Dependencias
+# ─────────────────────────────────────────────────────────────
+node_modules/
+jspm_packages/
+bower_components/
+vendor/
+.pnp
+.pnp.js
+.yarn/cache
+.yarn/unplugged
+.yarn/install-state.gz
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+ENV/
+.eggs/
+*.egg-info/
+dist/
+build/
+.tox/
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+.hypothesis/
+
+# .NET
+bin/
+obj/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+.vs/
+
+# Java / Kotlin
+target/
+.gradle/
+*.class
+*.jar
+!gradle/wrapper/gradle-wrapper.jar
+
+# ─────────────────────────────────────────────────────────────
+# Builds y salidas
+# ─────────────────────────────────────────────────────────────
+out/
+.next/
+.nuxt/
+.output/
+.svelte-kit/
+.turbo/
+.parcel-cache/
+.cache/
+*.tsbuildinfo
+storybook-static/
+
+# ─────────────────────────────────────────────────────────────
+# Tests y cobertura
+# ─────────────────────────────────────────────────────────────
+coverage/
+.coverage
+.coverage.*
+htmlcov/
+*.cover
+.nyc_output/
+junit.xml
+test-results/
+playwright-report/
+blob-report/
+.playwright/
+
+# ─────────────────────────────────────────────────────────────
+# Logs
+# ─────────────────────────────────────────────────────────────
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# ─────────────────────────────────────────────────────────────
+# Bases de datos locales
+# ─────────────────────────────────────────────────────────────
+*.sqlite
+*.sqlite3
+*.db
+*.rdb
+dump.sql
+*.dump
+*.bak
+
+# ─────────────────────────────────────────────────────────────
+# Sistema operativo
+# ─────────────────────────────────────────────────────────────
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+# ─────────────────────────────────────────────────────────────
+# Editores
+# ─────────────────────────────────────────────────────────────
+.idea/
+*.iml
+*.swp
+*.swo
+*~
+.project
+.classpath
+.settings/
+*.sublime-workspace
+
+# VS Code: se versionan los ajustes compartidos del proyecto,
+# no los personales.
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+!.vscode/launch.json
+!.vscode/tasks.json
+
+# ─────────────────────────────────────────────────────────────
+# Herramientas de IA
+# ─────────────────────────────────────────────────────────────
+# El contexto de .ai/ SÍ se versiona: es el valor de este template.
+# Lo que se ignora son los cachés y estados locales de cada herramienta.
+.claude/cache/
+.claude/local/
+.codex/cache/
+.zoo/cache/
+.aider*
+.cursorignore
+
+# ─────────────────────────────────────────────────────────────
+# Temporales
+# ─────────────────────────────────────────────────────────────
+tmp/
+temp/
+*.tmp
+*.temp
+*.pid
+*.seed
+*.orig
+*.rej
+.terraform/
+*.tfstate
+*.tfstate.*

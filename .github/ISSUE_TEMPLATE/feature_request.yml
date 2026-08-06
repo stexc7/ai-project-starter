@@ -1,0 +1,81 @@
+name: ✨ Proponer una funcionalidad
+description: Una idea para mejorar el producto
+title: "[FEAT] "
+labels: ["enhancement", "triage"]
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Describe el **problema** antes que la solución. Muchas veces hay una forma
+        más simple de resolverlo que la que se te ocurrió primero.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Qué problema resuelve
+      description: Qué duele hoy. Sin mencionar todavía la solución.
+      placeholder: |
+        Los usuarios con muchas facturas copian los datos a mano a su hoja de
+        contabilidad. Uno reportó que le lleva dos horas cada mes.
+    validations:
+      required: true
+
+  - type: textarea
+    id: who
+    attributes:
+      label: A quién afecta
+      description: Qué perfil de usuario, y cuántos aproximadamente.
+      placeholder: Usuarios con más de 20 facturas al mes. Aproximadamente el 15 % de las cuentas activas.
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Propuesta
+      description: Cómo lo resolverías. Si no tienes una idea concreta, déjalo vacío.
+      placeholder: Un botón "Exportar CSV" en la vista de facturas que respete los filtros activos.
+
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Criterios de aceptación
+      description: Cómo sabremos que está resuelto. Verificables, no deseos.
+      placeholder: |
+        - [ ] Existe un botón "Exportar CSV" en /facturas
+        - [ ] El CSV incluye número, fecha, cliente, base, IVA, total
+        - [ ] Respeta los filtros activos
+        - [ ] Si falla, muestra un error accionable
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternativas consideradas
+      placeholder: |
+        - Integración directa con software de contabilidad → demasiado alcance para el problema
+        - Exportar a XLSX → añade una dependencia pesada
+
+  - type: textarea
+    id: out-of-scope
+    attributes:
+      label: Fuera de alcance
+      description: Qué NO incluye esta propuesta. Delimitar evita que crezca sola.
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Prioridad sugerida
+      options:
+        - P0 — Bloquea trabajo
+        - P1 — Sprint actual
+        - P2 — Siguiente sprint
+        - P3 — Algún día
+    validations:
+      required: true
+
+  - type: textarea
+    id: workaround
+    attributes:
+      label: Rodeo actual
+      description: Qué hacen hoy los usuarios sin esta funcionalidad.

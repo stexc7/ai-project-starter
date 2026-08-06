@@ -1,0 +1,108 @@
+name: 📋 Tarea técnica
+description: Trabajo técnico que no es un bug ni una funcionalidad nueva
+title: "[TASK] "
+labels: ["task"]
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Para refactors, deuda técnica, infraestructura, documentación o
+        actualizaciones. Antes de crearla, comprueba que cumple
+        `docs/standards/DEFINITION_OF_READY.md`.
+
+  - type: textarea
+    id: objective
+    attributes:
+      label: Objetivo
+      description: Qué debe ser cierto cuando esto termine. Una frase.
+    validations:
+      required: true
+
+  - type: textarea
+    id: why
+    attributes:
+      label: Por qué
+      description: Qué se gana. "Está feo" no es motivo; "cada cambio en este módulo rompe algo" sí.
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Criterios de aceptación
+      placeholder: |
+        - [ ]
+        - [ ]
+    validations:
+      required: true
+
+  - type: textarea
+    id: scope
+    attributes:
+      label: Fuera de alcance
+      description: Qué NO se toca aunque esté cerca.
+
+  - type: dropdown
+    id: type
+    attributes:
+      label: Tipo
+      options:
+        - Refactor
+        - Deuda técnica
+        - Infraestructura / DevOps
+        - Documentación
+        - Actualización de dependencias
+        - Tests
+        - Seguridad
+        - Rendimiento
+    validations:
+      required: true
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Prioridad
+      options:
+        - P0 — Bloquea trabajo
+        - P1 — Sprint actual
+        - P2 — Siguiente sprint
+        - P3 — Algún día
+    validations:
+      required: true
+
+  - type: dropdown
+    id: estimate
+    attributes:
+      label: Estimación
+      options:
+        - "1 — Trivial"
+        - "2 — Pequeño"
+        - "3 — Mediano"
+        - "5 — Grande"
+        - "8 — Debería dividirse"
+    validations:
+      required: true
+
+  - type: input
+    id: depends
+    attributes:
+      label: Depende de
+      placeholder: "TASK-012, o vacío si no depende de nada"
+
+  - type: textarea
+    id: verification
+    attributes:
+      label: Cómo se verifica
+      description: Cómo sabremos que funcionó. Especialmente importante en refactors.
+
+  - type: checkboxes
+    id: ready
+    attributes:
+      label: Definition of Ready
+      options:
+        - label: El objetivo está claro y cabe en una frase
+        - label: Los criterios de aceptación son verificables
+        - label: El alcance está delimitado
+        - label: No depende de nada sin terminar
+        - label: Cabe en 3 días o menos

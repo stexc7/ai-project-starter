@@ -1,0 +1,118 @@
+name: 🐛 Reportar un bug
+description: Algo no funciona como debería
+title: "[BUG] "
+labels: ["bug", "triage"]
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Un bug sin pasos de reproducción no es un bug reportado: es una queja.
+        Dedica dos minutos a rellenar esto bien y ahorrarás horas de ida y vuelta.
+
+  - type: textarea
+    id: what-happens
+    attributes:
+      label: Qué pasa
+      description: El comportamiento que observas. Concreto.
+      placeholder: Al pulsar "Exportar CSV" con más de 1000 facturas, la página se queda en blanco.
+    validations:
+      required: true
+
+  - type: textarea
+    id: what-should-happen
+    attributes:
+      label: Qué debería pasar
+      placeholder: Debería descargarse el archivo CSV, o mostrar un error si no es posible.
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Pasos para reproducirlo
+      description: Numerados, sin ambigüedad. Alguien que no conoce el sistema debe poder seguirlos.
+      placeholder: |
+        1. Iniciar sesión como usuario con más de 1000 facturas
+        2. Ir a /facturas
+        3. Pulsar "Exportar CSV"
+        4. Esperar 30 segundos
+    validations:
+      required: true
+
+  - type: dropdown
+    id: consistency
+    attributes:
+      label: ¿Ocurre siempre?
+      options:
+        - Siempre
+        - A veces
+        - Solo una vez
+    validations:
+      required: true
+
+  - type: input
+    id: when-sometimes
+    attributes:
+      label: Si es "a veces", ¿cuándo?
+      placeholder: Solo con cuentas grandes, solo por la mañana, solo tras estar inactivo...
+
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Severidad
+      options:
+        - S0 — Producción caída
+        - S1 — Funcionalidad rota, sin rodeo posible
+        - S2 — Funcionalidad rota, hay rodeo
+        - S3 — Cosmético
+    validations:
+      required: true
+
+  - type: dropdown
+    id: environment
+    attributes:
+      label: Entorno
+      options:
+        - Producción
+        - Staging
+        - Local
+    validations:
+      required: true
+
+  - type: input
+    id: versions
+    attributes:
+      label: Versiones
+      placeholder: "App v1.2.0 · Chrome 130 · Windows 11"
+
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidencia
+      description: Logs, traza de la excepción, captura. **Sin contraseñas, tokens ni datos reales de clientes.**
+      render: shell
+
+  - type: input
+    id: what-changed
+    attributes:
+      label: Qué cambió antes de que empezara
+      placeholder: Último despliegue, cambio de configuración, actualización de dependencia...
+
+  - type: textarea
+    id: tried
+    attributes:
+      label: Qué ya intentaste
+      placeholder: |
+        - Vaciar caché → sigue igual
+        - Con otro usuario → sí ocurre
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Antes de enviar
+      options:
+        - label: He buscado si ya está reportado
+          required: true
+        - label: La evidencia no contiene secretos ni datos personales reales
+          required: true
