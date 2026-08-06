@@ -2,11 +2,11 @@ blank_issues_enabled: false
 
 contact_links:
   - name: 🔒 Reportar una vulnerabilidad de seguridad
-    url: https://github.com/OWNER/REPO/security/advisories/new
+    url: https://github.com/stexc7/ai-project-starter/security/advisories/new
     about: >-
       NO abras un issue público para una vulnerabilidad.
       Usa el reporte privado. Ver SECURITY.md.
 
   - name: 💬 Preguntas y dudas
-    url: https://github.com/OWNER/REPO/discussions
+    url: https://github.com/stexc7/ai-project-starter/discussions
     about: Para preguntas sobre el uso del proyecto, no para reportar problemas.

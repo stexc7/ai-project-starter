@@ -72,10 +72,16 @@ Estas cuatro tareas ya están en [`.ai/TASKS.md`](.ai/TASKS.md) como `TASK-001` 
 ### 3. Ajusta lo que sea tuyo
 
 - `.github/workflows/ci.yml` → descomenta el bloque de tu stack
-- `.github/CODEOWNERS` → sustituye `@OWNER`
-- `.github/ISSUE_TEMPLATE/config.yml` → sustituye `OWNER/REPO`
+- `.github/CODEOWNERS` → sustituye `@stexc7` por tu usuario
+- `.github/ISSUE_TEMPLATE/config.yml` → sustituye `stexc7/ai-project-starter`
 - `SECURITY.md` → pon tu correo de contacto
 - Borra `backend/` o `frontend/` si no aplican
+
+**Activa el Dependency graph** en *Settings → Security → Code security*. Sin él,
+`dependency-review-action` no puede funcionar. Viene marcado como no bloqueante
+(`continue-on-error`) precisamente para que un repo recién creado no arranque con
+el CI en rojo; una vez activado, quita esa línea de `.github/workflows/security.yml`
+para que las vulnerabilidades altas bloqueen el merge de verdad.
 
 ### 4. Arranca la primera sesión de IA
 

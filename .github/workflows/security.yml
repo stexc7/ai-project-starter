@@ -18,13 +18,13 @@ jobs:
     name: Escaneo de secretos
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           # Historial completo: un secreto borrado sigue estando en los commits anteriores.
           fetch-depth: 0
 
       - name: Gitleaks
-        uses: gitleaks/gitleaks-action@v2
+        uses: gitleaks/gitleaks-action@v3
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -40,7 +40,7 @@ jobs:
         # Opciones: c-cpp, csharp, go, java-kotlin, javascript-typescript,
         #           python, ruby, swift
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - uses: github/codeql-action/init@v3
         with:
@@ -54,11 +54,19 @@ jobs:
     name: Auditoría de dependencias
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
+      # Requiere el Dependency graph activado:
+      #   Settings → Security → Code security → Dependency graph
+      # Mientras esté desactivado, la acción falla con
+      # "Dependency review is not supported on this repository".
+      # Va como no bloqueante para que un repo recién creado desde la plantilla
+      # no tenga el CI en rojo desde el minuto cero. Cuando actives el
+      # Dependency graph, quita el continue-on-error para que sí bloquee.
       - name: Revisión de dependencias en el PR
         if: github.event_name == 'pull_request'
         uses: actions/dependency-review-action@v4
+        continue-on-error: true
         with:
           fail-on-severity: high
 

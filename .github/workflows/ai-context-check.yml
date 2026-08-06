@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       # ── Bloqueante: sin estos archivos, las IAs trabajan a ciegas ──
       - name: Archivos de contexto obligatorios

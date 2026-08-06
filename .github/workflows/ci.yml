@@ -24,7 +24,7 @@ jobs:
     name: Configurar CI
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Recordatorio
         run: |
           echo "::warning::El CI no está configurado. Descomenta el bloque de tu stack en .github/workflows/ci.yml (TASK-004)."
@@ -34,7 +34,7 @@ jobs:
   #   name: Node.js
   #   runs-on: ubuntu-latest
   #   steps:
-  #     - uses: actions/checkout@v4
+  #     - uses: actions/checkout@v7
   #
   #     - uses: actions/setup-node@v4
   #       with:
@@ -68,7 +68,7 @@ jobs:
   #   name: Python
   #   runs-on: ubuntu-latest
   #   steps:
-  #     - uses: actions/checkout@v4
+  #     - uses: actions/checkout@v7
   #
   #     - uses: actions/setup-python@v5
   #       with:
@@ -97,7 +97,7 @@ jobs:
   #   name: .NET
   #   runs-on: ubuntu-latest
   #   steps:
-  #     - uses: actions/checkout@v4
+  #     - uses: actions/checkout@v7
   #
   #     - uses: actions/setup-dotnet@v4
   #       with:
@@ -130,7 +130,7 @@ jobs:
   #       ports:
   #         - 5432:5432
   #   steps:
-  #     - uses: actions/checkout@v4
+  #     - uses: actions/checkout@v7
   #     - name: Tests de integración
   #       env:
   #         DATABASE_URL: postgres://postgres:postgres@localhost:5432/test
