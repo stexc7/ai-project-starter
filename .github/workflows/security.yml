@@ -65,7 +65,7 @@ jobs:
       # Dependency graph, quita el continue-on-error para que sí bloquee.
       - name: Revisión de dependencias en el PR
         if: github.event_name == 'pull_request'
-        uses: actions/dependency-review-action@v4
+        uses: actions/dependency-review-action@v5
         continue-on-error: true
         with:
           fail-on-severity: high
