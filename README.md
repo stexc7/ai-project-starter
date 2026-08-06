@@ -87,6 +87,10 @@ para que las vulnerabilidades altas bloqueen el merge de verdad.
 
 Pégale a tu IA el contenido de [`.prompts/onboard.md`](.prompts/onboard.md).
 
+Si es tu primera vez con esta metodología, lee
+[`docs/process/AI_WORKFLOW.md`](docs/process/AI_WORKFLOW.md) — son 5 minutos y
+cubre el ciclo completo, qué IA usar para qué, y los errores que más cuestan.
+
 ---
 
 ## Qué hay dentro
@@ -140,7 +144,7 @@ cinco, la respuesta sale genérica.
 | Carpeta | Contiene |
 |---------|----------|
 | `standards/` | Código, commits, ramas, DoR, DoD, revisión, tests, seguridad, API, observabilidad |
-| `process/` | Scrum, sprints, retrospectivas, releases, postmortems |
+| `process/` | **Cómo trabajar con las IAs**, Scrum, sprints, retrospectivas, releases, postmortems |
 | `adr/` | Architecture Decision Records, con plantilla y script generador |
 | `runbooks/` | Despliegue y reversión, paso a paso |
 

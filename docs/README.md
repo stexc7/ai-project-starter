@@ -32,6 +32,7 @@ Cómo trabaja el equipo.
 
 | Documento | Para qué |
 |-----------|----------|
+| [`AI_WORKFLOW.md`](process/AI_WORKFLOW.md) | **Cómo trabajar con las IAs en el día a día** |
 | [`SCRUM.md`](process/SCRUM.md) | Sprints, ceremonias, estimación |
 | [`SPRINT_TEMPLATE.md`](process/SPRINT_TEMPLATE.md) | Plantilla de sprint |
 | [`RETROSPECTIVE.md`](process/RETROSPECTIVE.md) | Plantilla de retrospectiva |
