@@ -75,6 +75,12 @@ out/
 .parcel-cache/
 .cache/
 *.tsbuildinfo
+
+# Next.js: lo regenera cada build, no se versiona
+next-env.d.ts
+
+# Vercel CLI
+.vercel/
 storybook-static/
 
 # ─────────────────────────────────────────────────────────────

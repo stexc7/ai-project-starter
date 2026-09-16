@@ -1,82 +1,75 @@
-# TESTING.md — Estado de las pruebas
+# TESTING.md — Estado de los tests
 
-> Qué está cubierto, qué no, y cómo se ejecuta todo. Codex lee este archivo.
-> La *estrategia* (qué tipo de test escribir y cuándo) está en
-> `docs/standards/TESTING_STRATEGY.md`.
+**Última revisión:** `2026-09-16`
 
-**Última actualización:** `<AAAA-MM-DD>`
+Estrategia y criterios: [`../docs/standards/TESTING_STRATEGY.md`](../docs/standards/TESTING_STRATEGY.md).
 
 ---
 
-## Cómo ejecutar
+## Cómo se ejecutan
 
 ```bash
-# Todo
-<comando>
-
-# Solo unitarios
-<comando>
-
-# Solo integración
-<comando>
-
-# Un archivo concreto
-<comando>
-
-# Con cobertura
-<comando>
-
-# En modo watch (desarrollo)
-<comando>
+npm test            # una pasada
+npm run test:watch  # mientras se desarrolla
 ```
 
-## Herramientas
+Vitest sobre `tests/`. Tardan menos de un segundo porque **no levantan nada**: ni
+navegador, ni servidor, ni red. Eso es consecuencia directa de la regla de
+`src/domain/`, que no toca el exterior y recibe la hora como parámetro.
 
-| Capa | Framework | Config |
-|------|-----------|--------|
-| Unitarios | | |
-| Integración | | |
-| E2E | | |
-| Cobertura | | |
-| Mocks / fixtures | | |
+## Qué está cubierto
 
-## Cobertura actual
+| Archivo | Qué prueba | Tests |
+|---------|-----------|-------|
+| `playback.test.ts` | Fases, posición, pausa, salto, consejo de desfase, punto de reencuentro | 13 |
+| `security.test.ts` | PIN con scrypt, token de sesión (manipulado, caducado, de otra sala), códigos, validación de entrada | 17 |
+| `room.test.ts` | Reducer de la sala: entrar, presencia, acciones, límites del chat y de la lista | 12 |
+| `sync.test.ts` | Protocolo de sondeo: deltas, fusión, duplicados, que no se filtra el hash del PIN | 11 |
+| `clock.test.ts` | Estimación del desfase: muestras lentas, mediana, margen de error | 6 |
+| `format.test.ts` | Timecodes de ida y vuelta, entradas inválidas | 8 |
+| `reconcile.test.ts` | El corrector de deriva: zona muerta, ajuste de velocidad, saltos y convergencia | 11 |
+| `sources.test.ts` | Clasificar enlaces: YouTube, archivos, DRM, esquemas peligrosos | 14 |
+| `extension-sync.test.ts` | Que `extension/sync.js` no se separe de `domain/playback.ts` | 5 |
+| | **Total** | **103** |
 
-| Módulo | Cobertura | Objetivo | Nota |
-|--------|-----------|----------|------|
-| | | | |
+Lo que se prueba es lo que duele si se rompe: **la sincronización** (si falla,
+la app no sirve para nada) y **la seguridad** (si falla, cualquiera entra en la
+sala). Los componentes de React son casi todos presentación sobre esa lógica.
 
-**Umbral mínimo para hacer merge:** `<N>%` sobre líneas modificadas.
+## Huecos conocidos
 
-## Zonas sin cubrir
+| Hueco | Por qué | Riesgo |
+|-------|---------|--------|
+| Sin tests de navegador automatizados | Se validó a mano con Playwright: dos «teléfonos» en la misma sala, la llamada de voz con micrófonos falsos, y la extensión cargada en Chromium contra un `netflix.com` interceptado | Una regresión de integración no la ve el CI. Es TASK-010 |
+| `src/server/store.ts` contra Upstash de verdad | Haría falta una base de datos en el CI | El camino de memoria sí está ejercitado; el de Redis se validó a mano |
+| `useRoom` y `useServerClock` | Son hooks: necesitarían entorno de DOM y temporizadores falsos | La lógica que contienen (`mergeDelta`, `estimateClock`) sí está probada, que es donde están los errores |
 
-> Sé explícito. Un hueco conocido se puede gestionar; uno desconocido, no.
+## Tests frágiles
 
-| Qué | Por qué no está cubierto | Riesgo |
-|-----|--------------------------|--------|
-| | | |
+Ninguno conocido. No hay esperas por tiempo real: donde hace falta una hora, se
+pasa como número.
 
-## Tests frágiles (*flaky*)
+## Lo verificado a mano, y con qué números
 
-> Un test que falla de forma intermitente es peor que no tenerlo: entrena al equipo
-> a ignorar el rojo.
+Con dos navegadores independientes contra el servidor de desarrollo:
 
-| Test | Frecuencia de fallo | Causa sospechada | Estado |
-|------|---------------------|------------------|--------|
-| | | | |
+| Qué | Resultado |
+|-----|-----------|
+| Uno da al play, el otro no toca nada | Arranca solo |
+| Uno pausa | El otro se para solo |
+| Uno salta de minuto | El otro salta también |
+| Deriva forzada de 2,9 s | Corregida a 0,15 s en 1,4 s |
+| Llamada de voz | Conecta en ~3 s, audio en los dos sentidos |
+| Extensión en un `netflix.com` interceptado | Play desde la web arranca el reproductor; pausar en el reproductor lo refleja la web |
 
-## Datos de prueba
+## Qué validar a mano antes de dar algo por hecho
 
-- **Fixtures:** `<ruta>`
-- **Factories / builders:** `<ruta>`
-- **Base de datos de test:** `<cómo se levanta y se limpia>`
-- Ningún test depende de datos de producción. Nunca.
+Con **dos dispositivos**, no dos pestañas del mismo:
 
-## Reglas
-
-- Cada test es independiente. Sin orden implícito, sin estado compartido.
-- Nada de `sleep()` para esperar. Usa esperas explícitas sobre condiciones.
-- Un test que falla debe decir **qué** falló, no solo *"esperaba true, recibí false"*.
-- Test nuevo obligatorio para: código nuevo, bug corregido, caso límite descubierto.
-- **Prohibido** hacer `skip` de un test para desbloquear un merge. Se arregla o se
-  documenta aquí con fecha de caducidad.
+- [ ] La cuenta atrás sale en los dos y el pitido cae a la vez.
+- [ ] Con YouTube: uno le da al play y al otro le arranca sin tocar nada.
+- [ ] La llamada de voz abre, y con auriculares no hay eco.
+- [ ] Al acabar, los dos marcan el mismo timecode.
+- [ ] Un mensaje llega al otro en 2-3 segundos.
+- [ ] El punto verde se apaga al cerrar la app en el otro móvil.
+- [ ] Añadida a la pantalla de inicio, abre sin barra de Safari.

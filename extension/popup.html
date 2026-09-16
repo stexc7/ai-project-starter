@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <title>Juntos</title>
+    <style>
+      :root { color-scheme: dark; }
+      body {
+        width: 280px; margin: 0; padding: 16px;
+        font: 14px/1.45 -apple-system, system-ui, sans-serif;
+        color: #f6f2ff; background: #120c1c;
+      }
+      h1 { font-size: 16px; margin: 0 0 12px; }
+      label { display: block; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: #6f6288; margin: 10px 0 4px; }
+      input {
+        width: 100%; box-sizing: border-box; padding: 9px 10px; border-radius: 10px;
+        border: 1px solid #2e2142; background: #0a0710; color: inherit; font: inherit;
+      }
+      button {
+        width: 100%; margin-top: 14px; padding: 11px; border: 0; border-radius: 10px;
+        font: 600 14px/1 inherit; color: #fff; cursor: pointer;
+        background: linear-gradient(135deg, #8b5cf6, #fb7185);
+      }
+      button.ghost { background: #221733; color: #a598c0; margin-top: 8px; }
+      p { margin: 10px 0 0; font-size: 12.5px; color: #a598c0; }
+      .error { color: #ffd7dd; }
+      .ok { color: #34d399; }
+      [hidden] { display: none !important; }
+    </style>
+  </head>
+  <body>
+    <h1>Juntos</h1>
+
+    <form id="join">
+      <label for="origin">Dirección de vuestra app</label>
+      <input id="origin" type="url" placeholder="https://juntos.vercel.app" required />
+
+      <label for="code">Código de sala</label>
+      <input id="code" maxlength="8" placeholder="ABC234" autocapitalize="characters" required />
+
+      <label for="name">Tu nombre</label>
+      <input id="name" maxlength="24" placeholder="Cómo te llama" required />
+
+      <label for="pin">PIN</label>
+      <input id="pin" inputmode="numeric" maxlength="4" placeholder="••••" required />
+
+      <button type="submit">Conectar</button>
+    </form>
+
+    <div id="connected" hidden>
+      <p class="ok">Conectado a la sala <strong id="room-code"></strong>.</p>
+      <p>Abre Netflix y dale al play. Lo que hagas se aplica en los dos.</p>
+      <button class="ghost" id="leave">Desconectar</button>
+    </div>
+
+    <p id="message"></p>
+
+    <script src="popup.js"></script>
+  </body>
+</html>

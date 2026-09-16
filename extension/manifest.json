@@ -1,0 +1,49 @@
+{
+  "manifest_version": 3,
+  "name": "Juntos \u2014 ver a la vez",
+  "version": "0.1.0",
+  "description": "Sincroniza el reproductor de Netflix, Prime, Disney+ o Max con vuestra sala de Juntos.",
+  "default_locale": "es",
+  "permissions": [
+    "storage",
+    "alarms"
+  ],
+  "optional_host_permissions": [
+    "https://*/*",
+    "http://localhost/*"
+  ],
+  "host_permissions": [
+    "https://*.netflix.com/*",
+    "https://*.primevideo.com/*",
+    "https://*.disneyplus.com/*",
+    "https://*.max.com/*",
+    "https://*.hbomax.com/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://*.netflix.com/*",
+        "https://*.primevideo.com/*",
+        "https://*.disneyplus.com/*",
+        "https://*.max.com/*",
+        "https://*.hbomax.com/*"
+      ],
+      "js": [
+        "sync.js",
+        "content.js"
+      ],
+      "run_at": "document_idle",
+      "all_frames": true
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Juntos"
+  },
+  "icons": {
+    "128": "icon-128.png"
+  }
+}

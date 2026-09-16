@@ -1,164 +1,129 @@
-# Runbook: Desplegar a producción
+# Runbook: desplegar Juntos en Vercel
 
-**Cuándo usarlo:** release planificado o hotfix aprobado.
-**Duración estimada:** `<N>` minutos
-**Requisitos:** acceso a `<plataforma>`, permisos de despliegue, acceso a la monitorización
-**Riesgo:** medio
+> Tiempo: unos 15 minutos la primera vez. Después, cada `git push` despliega solo.
+> Todo lo que hace falta cabe en el plan gratuito de Vercel y de Upstash.
 
-> Rellena los `<marcadores>` con los comandos reales de tu proyecto la primera vez
-> que despliegues. Un runbook con marcadores sin rellenar no sirve de nada.
+Para revertir: [`rollback.md`](rollback.md).
 
 ---
 
-## Antes de empezar
+## Qué vas a montar
 
-- [ ] Es martes, miércoles o jueves por la mañana (ver `docs/process/RELEASE_PROCESS.md`)
-- [ ] Hay al menos una persona más disponible durante la próxima hora
-- [ ] CI en verde en `main`
-- [ ] Sin bugs S0 ni S1 abiertos
-- [ ] `.ai/CHANGELOG.md` actualizado
-- [ ] Tag de versión creado y subido
-- [ ] Migraciones revisadas, con `down` probado
-- [ ] Variables de entorno nuevas ya creadas en producción
-- [ ] Copia de seguridad reciente **verificada** (restaurada en un entorno de prueba)
-- [ ] Panel de monitorización abierto en otra ventana
+```
+ iPhone ─┐
+         ├──▶  Vercel (Next.js)  ──▶  Upstash Redis
+ iPhone ─┘        la app              donde vive la sala
+```
+
+Dos servicios, los dos gratis para dos personas. Nada más.
 
 ---
 
-## Pasos
+## 1. La base de datos (Upstash Redis)
 
-### 1. Anunciar el inicio
+Hace falta porque en Vercel cada petición puede caer en una función distinta. Sin
+un sitio común, cada una tendría su propia copia de las salas y los dos móviles
+no se verían.
 
-Avisa al equipo por el canal habitual: versión, qué incluye, duración estimada.
+1. Entra en [console.upstash.com](https://console.upstash.com) y crea una cuenta.
+2. **Create Database**. Tipo *Redis*.
+   - Nombre: `juntos`
+   - Región: la más cercana a vosotros (`eu-west-1` para España).
+   - Plan: **Free**.
+3. Abre la base de datos → pestaña **REST API**. Copia estos dos valores:
+   - `UPSTASH_REDIS_REST_URL`
+   - `UPSTASH_REDIS_REST_TOKEN`
 
-### 2. Verificar el estado actual
+> El token da acceso completo a esa base de datos. No lo pegues en un chat, ni en
+> un issue, ni en el código. Solo en las variables de entorno de Vercel.
 
-```bash
-<comando para ver la versión desplegada actualmente>
-```
+## 2. El secreto de la sesión
 
-**Esperado:** la versión anterior a la que vas a desplegar.
-**Si no coincide:** para. Alguien desplegó algo. Averigua qué antes de seguir.
-
-### 3. Anotar la línea base
-
-Antes de tocar nada, apunta los valores actuales:
-
-| Métrica | Valor ahora |
-|---------|-------------|
-| Tasa de error | |
-| Latencia p95 | |
-| Peticiones/s | |
-
-Sin esto no sabrás si el despliegue empeoró algo.
-
-### 4. Aplicar migraciones de base de datos
-
-> Solo si las hay. Van **antes** del código nuevo, y deben ser compatibles con la
-> versión que está corriendo ahora.
+Genera uno de verdad, en tu terminal:
 
 ```bash
-<comando de migración>
+openssl rand -base64 32
 ```
 
-**Esperado:** todas las migraciones aplicadas, sin errores.
-**Si falla:** no despliegues el código. Revisa el error. La base de datos queda en
-el estado en que esté — comprueba si la migración es transaccional.
+Guárdalo: es `SESSION_SECRET`. Si lo cambias más adelante, todas las sesiones
+abiertas se caen y hay que volver a meter el PIN. No pasa nada, pero avisa.
 
-### 5. Desplegar
+## 3. Desplegar
+
+1. Entra en [vercel.com](https://vercel.com) con tu cuenta de GitHub.
+2. **Add New → Project** y elige este repositorio.
+3. Vercel detecta Next.js solo. **No cambies nada** del build.
+4. Despliega **la rama donde está la app**, no `main`, hasta que la mezcles.
+5. Antes de pulsar *Deploy*, abre **Environment Variables** y añade las tres,
+   marcadas para *Production*, *Preview* y *Development*:
+
+   | Variable | Valor |
+   |----------|-------|
+   | `SESSION_SECRET` | el que generaste en el paso 2 |
+   | `UPSTASH_REDIS_REST_URL` | el de Upstash |
+   | `UPSTASH_REDIS_REST_TOKEN` | el de Upstash |
+
+6. **Deploy**.
+
+Si falta alguna variable, la app **no arranca en silencio**: falla con un mensaje
+que dice exactamente cuál falta. Es a propósito — es mejor que dos personas
+descubran a mitad de película que no se ven.
+
+## 4. Comprobar que funciona
 
 ```bash
-<comando de despliegue>
+# El reloj responde
+curl https://TU-APP.vercel.app/api/time
+# → {"serverMs":1789535348796}
 ```
 
-**Esperado:** despliegue completado, health check en verde.
-**Si falla:** ve directo a **Reversión**.
+Y luego, con los dos móviles:
 
-### 6. Verificar el health check
+- [ ] Uno crea una sala. Sale un código de 6 caracteres.
+- [ ] El otro entra con ese código y el PIN.
+- [ ] En la cabecera de los dos aparecen **dos avatares con el punto verde**.
+- [ ] Abajo del todo pone *Relojes sincronizados · ±xx ms*. Si pone más de
+      ±300 ms, la cobertura de alguno va mal: se corrige sola al mejorar.
+- [ ] Uno escribe en el chat y le llega al otro en 2-3 segundos.
+- [ ] Uno pulsa **Empezar juntos**: la cuenta atrás sale **en los dos**.
+- [ ] Al acabar, los dos marcan el mismo timecode.
 
-```bash
-curl -f https://<dominio>/health
-curl -f https://<dominio>/health/ready
-```
+## 5. Instalarla en el iPhone
 
-**Esperado:** `200 OK` en ambos.
-**Si falla:** espera 60 segundos y reintenta (puede estar arrancando). Si sigue
-fallando, **revierte**.
+Abrid la URL en **Safari** (no en Chrome: en iOS solo Safari instala PWAs) →
+botón de compartir → **Añadir a pantalla de inicio**.
 
-### 7. Probar el camino crítico a mano
-
-- [ ] Iniciar sesión
-- [ ] `<flujo principal del producto>`
-- [ ] `<lo que cambió en este release>`
-
-**Si algo no funciona:** revierte. No intentes arreglarlo en caliente.
+Se abre a pantalla completa, sin barra de navegador. El icono es un corazón con
+un play dentro.
 
 ---
 
-## Verificación final — primeros 15 minutos
+## Mantenimiento
 
-Quédate mirando la monitorización. No te vayas.
+**No hay.** Las salas caducan solas al mes de no usarse y los contadores de
+intentos fallidos a los 15 minutos. No hay copias de seguridad que hacer porque
+no hay nada que valga la pena guardar: un chat de anoche y una lista de pelis.
 
-| Minuto | Comprobación | Umbral para revertir |
-|--------|--------------|----------------------|
-| 1 | Health check | Falla dos veces seguidas |
-| 3 | Tasa de error | Más del doble de la línea base |
-| 5 | Latencia p95 | Más del doble de la línea base |
-| 10 | Logs de error | Errores nuevos que no existían antes |
-| 15 | Todo lo anterior | Cualquier cosa sin explicación |
+### Cuánto gasta
 
-- [ ] 15 minutos sin incidencias
-- [ ] Equipo avisado de que el despliegue terminó bien
+Dos personas, tres horas de película a la semana:
 
----
+- **Vercel:** unas 40.000 invocaciones al mes. El plan gratuito da de sobra.
+- **Upstash:** unos 20.000 comandos al mes, sobre 500.000 gratis.
 
-## Reversión
-
-**Revierte de inmediato si:** hay pérdida de datos, funcionalidad crítica caída,
-tasa de error por encima del doble, o fallo de seguridad.
-
-**No lo pienses demasiado.** Revertir es barato; un incidente largo no.
-
-```bash
-<comando de reversión>
-```
-
-Después de revertir:
-
-- [ ] Verificar que la versión anterior está sirviendo
-- [ ] Health check en verde
-- [ ] Métricas de vuelta a la línea base
-- [ ] Avisar al equipo
-- [ ] Registrar en `.ai/BUGS.md`
-- [ ] Postmortem si el impacto fue serio (`docs/process/INCIDENT_POSTMORTEM.md`)
-
-### Si había migraciones
-
-Una migración aplicada no se revierte sola al revertir el código.
-
-```bash
-<comando de rollback de migración>
-```
-
-**Cuidado:** si la migración borró o transformó datos, el `down` puede no
-recuperarlos. Por eso la copia de seguridad verificada es un requisito previo,
-no una formalidad.
+Si en algún momento se acercara al límite, lo primero que hay que mirar es si
+alguna pestaña se quedó abierta sondeando. La app espacia el sondeo a 10 s en
+segundo plano justo para eso.
 
 ---
 
-## Escalar
+## Cuando algo va mal
 
-| Situación | A quién | Cómo |
-|-----------|---------|------|
-| No consigues revertir | `<...>` | `<...>` |
-| Pérdida de datos | `<...>` | `<...>` |
-| Fallo de seguridad | `<...>` | `<...>` |
-| Lleva más de 30 min caído | `<...>` | `<...>` |
-
----
-
-## Después
-
-- [ ] `.ai/CHANGELOG.md` marcado como publicado
-- [ ] `.ai/AI_MEMORY.md` con lo aprendido si hubo sorpresas
-- [ ] Este runbook actualizado si algún paso no era exacto
+| Síntoma | Causa más probable | Qué hacer |
+|---------|--------------------|-----------|
+| Error 500 nada más entrar | Falta una variable de entorno | Míralas en Vercel → Settings → Environment Variables, y **vuelve a desplegar**: no se aplican solas |
+| «Tu sesión ha caducado» sin parar | `SESSION_SECRET` cambió, o no está puesta | Ponla fija y redespliega |
+| Cada uno ve una sala distinta | Faltan las variables de Upstash | Igual que arriba |
+| «Demasiados intentos fallidos» | 10 PIN mal en 15 minutos | Esperar, o borrar la clave `juntos:attempts:CODIGO` desde la consola de Upstash |
+| La cuenta atrás no suena | iOS no deja sonar hasta el primer toque | Tocar la pantalla una vez al entrar en la sala |
+| El reloj marca ±500 ms o más | Red móvil con mucha latencia | Se corrige solo; si no, cerrar y abrir la app fuerza una medición nueva |

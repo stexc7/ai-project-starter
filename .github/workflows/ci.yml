@@ -1,10 +1,7 @@
 name: CI
 
-# ─────────────────────────────────────────────────────────────────────────────
-# PLANTILLA. Descomenta el bloque de tu stack y borra el resto.
 # Objetivo: que el pipeline completo tarde menos de 10 minutos. Si tarda más,
 # la gente deja de esperarlo y empieza a mergear sin mirar.
-# ─────────────────────────────────────────────────────────────────────────────
 
 on:
   push:
@@ -20,118 +17,35 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  placeholder:
-    name: Configurar CI
+  node:
+    name: Node.js
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      - name: Recordatorio
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+
+      - name: Instalar
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Tipos
+        run: npm run typecheck
+
+      - name: Tests
+        run: npm test
+
+      - name: Build
+        run: npm run build
+
+      # El icono se genera por script. Si alguien lo edita a mano, el build de
+      # Vercel serviría algo que este repositorio no sabe reproducir.
+      - name: Los iconos coinciden con el script que los genera
         run: |
-          echo "::warning::El CI no está configurado. Descomenta el bloque de tu stack en .github/workflows/ci.yml (TASK-004)."
-
-  # ───────────────────────────── Node.js ─────────────────────────────
-  # node:
-  #   name: Node.js
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v7
-  #
-  #     - uses: actions/setup-node@v4
-  #       with:
-  #         node-version: '22'
-  #         cache: 'npm'
-  #
-  #     - name: Instalar
-  #       run: npm ci
-  #
-  #     - name: Lint
-  #       run: npm run lint
-  #
-  #     - name: Tipos
-  #       run: npm run typecheck
-  #
-  #     - name: Tests
-  #       run: npm test -- --coverage
-  #
-  #     - name: Build
-  #       run: npm run build
-  #
-  #     - name: Subir cobertura
-  #       if: always()
-  #       uses: actions/upload-artifact@v4
-  #       with:
-  #         name: coverage
-  #         path: coverage/
-
-  # ───────────────────────────── Python ──────────────────────────────
-  # python:
-  #   name: Python
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v7
-  #
-  #     - uses: actions/setup-python@v5
-  #       with:
-  #         python-version: '3.12'
-  #         cache: 'pip'
-  #
-  #     - name: Instalar
-  #       run: |
-  #         python -m pip install --upgrade pip
-  #         pip install -r requirements.txt -r requirements-dev.txt
-  #
-  #     - name: Lint
-  #       run: ruff check .
-  #
-  #     - name: Formato
-  #       run: ruff format --check .
-  #
-  #     - name: Tipos
-  #       run: mypy .
-  #
-  #     - name: Tests
-  #       run: pytest --cov --cov-report=term-missing
-
-  # ─────────────────────────────── .NET ──────────────────────────────
-  # dotnet:
-  #   name: .NET
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v7
-  #
-  #     - uses: actions/setup-dotnet@v4
-  #       with:
-  #         dotnet-version: '8.0.x'
-  #
-  #     - name: Restaurar
-  #       run: dotnet restore
-  #
-  #     - name: Build
-  #       run: dotnet build --no-restore --configuration Release
-  #
-  #     - name: Tests
-  #       run: dotnet test --no-build --configuration Release --collect:"XPlat Code Coverage"
-
-  # ─────────────────── Tests de integración con BD ───────────────────
-  # integration:
-  #   name: Integración
-  #   runs-on: ubuntu-latest
-  #   services:
-  #     postgres:
-  #       image: postgres:16
-  #       env:
-  #         POSTGRES_PASSWORD: postgres
-  #         POSTGRES_DB: test
-  #       options: >-
-  #         --health-cmd pg_isready
-  #         --health-interval 10s
-  #         --health-timeout 5s
-  #         --health-retries 5
-  #       ports:
-  #         - 5432:5432
-  #   steps:
-  #     - uses: actions/checkout@v7
-  #     - name: Tests de integración
-  #       env:
-  #         DATABASE_URL: postgres://postgres:postgres@localhost:5432/test
-  #       run: <comando>
+          npm run icons
+          git diff --exit-code -- app/icon.png app/apple-icon.png public/ extension/icon-128.png

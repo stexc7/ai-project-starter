@@ -1,0 +1,773 @@
+/*
+ * Sistema visual de Juntos.
+ *
+ * Móvil primero y a oscuras: esto se usa con la luz apagada, a un palmo de la
+ * cara, mientras empieza una película. Nada debe deslumbrar salvo la cuenta
+ * atrás, que sí tiene que verse desde el otro lado del sofá.
+ */
+
+:root {
+  --bg: #0a0710;
+  --bg-soft: #120c1c;
+  --surface: #181026;
+  --surface-2: #221733;
+  --line: #2e2142;
+
+  --text: #f6f2ff;
+  --text-muted: #a598c0;
+  --text-faint: #6f6288;
+
+  --violet: #8b5cf6;
+  --violet-soft: #a78bfa;
+  --coral: #fb7185;
+  --green: #34d399;
+  --amber: #fbbf24;
+
+  --radius: 18px;
+  --radius-sm: 12px;
+  --radius-lg: 28px;
+
+  --shadow: 0 18px 40px -20px rgb(0 0 0 / 0.9);
+  --gutter: 16px;
+
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--text);
+}
+
+body {
+  font-family:
+    -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', Roboto, system-ui, sans-serif;
+  font-size: 16px;
+  line-height: 1.45;
+  min-height: 100svh;
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior-y: none;
+  background-image:
+    radial-gradient(90% 55% at 12% -8%, rgb(139 92 246 / 0.22), transparent 60%),
+    radial-gradient(70% 45% at 96% 4%, rgb(251 113 133 / 0.16), transparent 62%);
+  background-attachment: fixed;
+}
+
+button,
+input,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+/* 16px evita que Safari haga zoom al enfocar un campo. */
+input,
+textarea {
+  font-size: 16px;
+}
+
+/* ─────────────────────────────── Estructura ─────────────────────────────── */
+
+.screen {
+  max-width: 520px;
+  margin: 0 auto;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  padding: calc(var(--safe-top) + 12px) var(--gutter) calc(var(--safe-bottom) + 12px);
+  gap: 14px;
+}
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.spread {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.grow {
+  flex: 1;
+  min-width: 0;
+}
+
+.card {
+  background: linear-gradient(180deg, var(--surface) 0%, var(--bg-soft) 100%);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 16px;
+  box-shadow: var(--shadow);
+}
+
+.muted {
+  color: var(--text-muted);
+}
+
+.faint {
+  color: var(--text-faint);
+  font-size: 13px;
+}
+
+.label {
+  font-size: 12px;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  font-weight: 650;
+}
+
+h1,
+h2,
+h3 {
+  margin: 0;
+  letter-spacing: -0.02em;
+}
+
+h1 {
+  font-size: 30px;
+  font-weight: 750;
+}
+
+h2 {
+  font-size: 19px;
+  font-weight: 700;
+}
+
+/* ──────────────────────────────── Controles ─────────────────────────────── */
+
+.btn {
+  appearance: none;
+  border: 1px solid var(--line);
+  background: var(--surface-2);
+  color: var(--text);
+  border-radius: var(--radius-sm);
+  padding: 13px 16px;
+  font-weight: 620;
+  cursor: pointer;
+  transition:
+    transform 0.12s ease,
+    filter 0.12s ease,
+    opacity 0.12s ease;
+  touch-action: manipulation;
+  user-select: none;
+}
+
+.btn:active:not(:disabled) {
+  transform: scale(0.97);
+  filter: brightness(1.15);
+}
+
+.btn:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.btn--primary {
+  border-color: transparent;
+  background: linear-gradient(135deg, var(--violet) 0%, var(--coral) 130%);
+  color: #fff;
+  box-shadow: 0 12px 28px -14px var(--violet);
+}
+
+.btn--danger {
+  border-color: transparent;
+  background: rgb(251 113 133 / 0.16);
+  color: var(--coral);
+}
+
+.btn--ghost {
+  background: transparent;
+}
+
+.btn--block {
+  width: 100%;
+}
+
+.btn--big {
+  padding: 18px;
+  font-size: 18px;
+  font-weight: 720;
+  border-radius: var(--radius);
+}
+
+.btn--icon {
+  padding: 10px 12px;
+  min-width: 46px;
+}
+
+.field {
+  width: 100%;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 13px 14px;
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.field:focus {
+  border-color: var(--violet);
+}
+
+.field::placeholder {
+  color: var(--text-faint);
+}
+
+.field--code {
+  text-align: center;
+  font-size: 26px;
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+  font-weight: 700;
+  padding-left: 0.34em;
+}
+
+.field--pin {
+  text-align: center;
+  font-size: 26px;
+  letter-spacing: 0.5em;
+  font-weight: 700;
+  padding-left: 0.5em;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 6px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  user-select: none;
+}
+
+.chip--code {
+  letter-spacing: 0.18em;
+  font-variant-numeric: tabular-nums;
+}
+
+.error {
+  background: rgb(251 113 133 / 0.12);
+  border: 1px solid rgb(251 113 133 / 0.35);
+  color: #ffd7dd;
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  font-size: 14px;
+}
+
+.emoji-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+}
+
+.emoji-grid button {
+  font-size: 24px;
+  padding: 9px 0;
+  line-height: 1;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+.emoji-grid button[aria-pressed='true'] {
+  border-color: var(--violet);
+  background: rgb(139 92 246 / 0.18);
+}
+
+/* ──────────────────────────────── Cabecera ──────────────────────────────── */
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.presence {
+  display: flex;
+  gap: 6px;
+}
+
+.avatar {
+  position: relative;
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  font-size: 17px;
+}
+
+.avatar[data-online='false'] {
+  opacity: 0.4;
+}
+
+.avatar::after {
+  content: '';
+  position: absolute;
+  right: -1px;
+  bottom: -1px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--text-faint);
+  border: 2px solid var(--bg);
+}
+
+.avatar[data-online='true']::after {
+  background: var(--green);
+}
+
+/* ───────────────────────────── Escenario de sync ────────────────────────── */
+
+.stage {
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+  padding: 22px 16px 18px;
+}
+
+.stage__title {
+  font-size: 17px;
+  font-weight: 680;
+  min-height: 24px;
+}
+
+.timecode {
+  font-size: 58px;
+  font-weight: 760;
+  letter-spacing: -0.035em;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.04;
+  margin: 8px 0 2px;
+}
+
+.timecode--idle {
+  color: var(--text-faint);
+}
+
+.stage__hint {
+  color: var(--text-muted);
+  font-size: 14px;
+  min-height: 20px;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 5px 11px;
+  border-radius: 999px;
+}
+
+.badge--playing {
+  background: rgb(52 211 153 / 0.16);
+  color: var(--green);
+}
+
+.badge--paused {
+  background: rgb(251 191 36 / 0.16);
+  color: var(--amber);
+}
+
+.badge--idle {
+  background: var(--surface-2);
+  color: var(--text-muted);
+}
+
+.controls {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-top: 14px;
+}
+
+/* ────────────────────────────── Reproductor ─────────────────────────────── */
+
+.stage--video {
+  padding: 12px;
+  text-align: left;
+}
+
+.player-frame {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: #000;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.player,
+.player--embed,
+.player--embed iframe {
+  width: 100%;
+  height: 100%;
+  display: block;
+  border: 0;
+}
+
+/*
+ * iOS no deja que una web arranque un vídeo sin que la persona haya tocado
+ * algo antes. Esta capa recoge ese primer toque; a partir de ahí el motor de
+ * sincronización ya puede dar al play por su cuenta.
+ */
+.player-gate {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border: 0;
+  cursor: pointer;
+  color: var(--text);
+  background: rgb(10 7 16 / 0.82);
+  backdrop-filter: blur(3px);
+  font-size: 16px;
+}
+
+.player-gate__icon {
+  width: 60px;
+  height: 60px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  font-size: 24px;
+  margin-bottom: 4px;
+  background: linear-gradient(135deg, var(--violet) 0%, var(--coral) 130%);
+  box-shadow: 0 12px 28px -14px var(--violet);
+}
+
+.hint {
+  margin: 0;
+  font-size: 14px;
+  border-radius: var(--radius-sm);
+  padding: 9px 12px;
+}
+
+.hint--auto {
+  background: rgb(52 211 153 / 0.14);
+  color: var(--green);
+}
+
+.hint--assist {
+  background: rgb(251 191 36 / 0.13);
+  color: #fde2a7;
+}
+
+.hint--error {
+  background: rgb(251 113 133 / 0.13);
+  color: #ffd7dd;
+}
+
+/* ───────────────────────────── Cuenta atrás ─────────────────────────────── */
+
+.countdown {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  padding: var(--gutter);
+  background: radial-gradient(60% 50% at 50% 42%, #2a1240 0%, #0a0710 72%);
+  animation: fade-in 0.2s ease;
+}
+
+.countdown__number {
+  font-size: 34vw;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.06em;
+  font-variant-numeric: tabular-nums;
+  background: linear-gradient(160deg, #fff 10%, var(--violet-soft) 60%, var(--coral) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: pulse 1s ease-in-out infinite;
+}
+
+.countdown__go {
+  font-size: 15vw;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: #fff;
+  animation: pop 0.45s cubic-bezier(0.2, 1.4, 0.4, 1);
+}
+
+.countdown__caption {
+  color: var(--text-muted);
+  font-size: 15px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-weight: 650;
+}
+
+.countdown--go {
+  background: radial-gradient(60% 50% at 50% 45%, #46145c 0%, #0a0710 75%);
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  55% {
+    transform: scale(0.9);
+    opacity: 0.75;
+  }
+}
+
+@keyframes pop {
+  from {
+    transform: scale(0.6);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* ─────────────────────────────── Reacciones ─────────────────────────────── */
+
+.reaction-bar {
+  display: flex;
+  gap: 6px;
+  justify-content: space-between;
+}
+
+.reaction-bar button {
+  flex: 1;
+  font-size: 22px;
+  line-height: 1;
+  padding: 10px 0;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.reaction-bar button:active {
+  transform: scale(0.92);
+}
+
+.floaters {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 40;
+  overflow: hidden;
+}
+
+.floater {
+  position: absolute;
+  bottom: 18%;
+  font-size: 40px;
+  animation: float-up 2.6s ease-out forwards;
+}
+
+@keyframes float-up {
+  0% {
+    transform: translateY(0) scale(0.5);
+    opacity: 0;
+  }
+  18% {
+    transform: translateY(-40px) scale(1.15);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-58vh) scale(0.85);
+    opacity: 0;
+  }
+}
+
+/* ──────────────────────────────────  Chat ───────────────────────────────── */
+
+/*
+ * Altura acotada a propósito: si el chat crece con cada mensaje, al llegar uno
+ * nuevo la página entera se desplaza y el panel de sincronización — que es lo
+ * único que no puede perderse de vista — se va hacia arriba.
+ */
+.chat {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  padding: 2px;
+  min-height: 120px;
+  max-height: 38svh;
+}
+
+.bubble {
+  max-width: 82%;
+  align-self: flex-start;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 16px 16px 16px 5px;
+  padding: 9px 13px;
+  font-size: 15px;
+  overflow-wrap: anywhere;
+}
+
+.bubble--mine {
+  align-self: flex-end;
+  border-radius: 16px 16px 5px 16px;
+  background: linear-gradient(135deg, rgb(139 92 246 / 0.35), rgb(251 113 133 / 0.25));
+  border-color: rgb(139 92 246 / 0.4);
+}
+
+.bubble__meta {
+  font-size: 11px;
+  color: var(--text-faint);
+  margin-bottom: 2px;
+}
+
+.composer {
+  display: flex;
+  gap: 8px;
+  align-items: flex-end;
+}
+
+/* ──────────────────────────────── Listas ────────────────────────────────── */
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  font-size: 15px;
+}
+
+.panel > summary {
+  cursor: pointer;
+  list-style: none;
+  font-weight: 650;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.panel > summary::-webkit-details-marker {
+  display: none;
+}
+
+.panel > summary::after {
+  content: '＋';
+  color: var(--text-faint);
+  font-weight: 400;
+}
+
+.panel[open] > summary::after {
+  content: '－';
+}
+
+.panel[open] > summary {
+  margin-bottom: 12px;
+}
+
+/* ───────────────────────────────── Detalles ─────────────────────────────── */
+
+.steps {
+  margin: 0;
+  padding-left: 20px;
+  color: var(--text-muted);
+  font-size: 14.5px;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.steps strong {
+  color: var(--text);
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo__mark {
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  font-size: 22px;
+  background: linear-gradient(135deg, var(--violet) 0%, var(--coral) 130%);
+  box-shadow: 0 12px 26px -14px var(--violet);
+}
+
+a {
+  color: var(--violet-soft);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

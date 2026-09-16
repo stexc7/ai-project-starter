@@ -1,52 +1,30 @@
 # tests/
 
-Tests que **cruzan capas**: end-to-end, integración amplia, pruebas de carga.
+Tests de la lógica del proyecto, con [Vitest](https://vitest.dev).
 
-> Los tests unitarios viven junto al código que prueban (`backend/src/.../*.test.*`),
-> no aquí. Esta carpeta es solo para lo que no pertenece a un módulo concreto.
-
----
-
-## Estructura sugerida
-
-```
-tests/
-  e2e/          Flujos completos desde la interfaz de usuario
-  integration/  Varios módulos o servicios juntos
-  load/         Pruebas de carga y rendimiento
-  fixtures/     Datos de prueba compartidos
-  helpers/      Utilidades comunes a los tests
+```bash
+npm test            # una pasada
+npm run test:watch  # mientras se desarrolla
 ```
 
-## Qué va en cada sitio
+## Por qué están todos aquí
 
-| Tipo | Dónde | Cuántos |
-|------|-------|---------|
-| Unitario | Junto al código | Muchos |
-| Integración de un módulo | Junto al código | Bastantes |
-| Integración entre servicios | `tests/integration/` | Algunos |
-| E2E | `tests/e2e/` | Pocos |
+En muchos proyectos el test unitario vive junto al código que prueba. Aquí no
+hace falta: lo que merece la pena probar está concentrado en `src/domain/`, que
+es **puro** — no toca red, ni React, ni el reloj del sistema. La hora entra
+siempre como parámetro.
 
-## Qué probar en E2E
+Eso es lo que permite que 67 tests sobre una aplicación de sincronización en
+tiempo real corran en menos de un segundo, sin levantar un navegador ni un
+servidor.
 
-Solo los caminos que, si se rompen, el negocio para:
+| Archivo | Qué cubre |
+|---------|-----------|
+| `playback.test.ts` | El ancla: fases, posición, pausa, salto, desfase |
+| `clock.test.ts` | Estimación del desfase entre relojes |
+| `room.test.ts` | La sala como reducer |
+| `sync.test.ts` | Protocolo de sondeo y fusión en el cliente |
+| `security.test.ts` | PIN, token de sesión, códigos, validación de entrada |
+| `format.test.ts` | Timecodes |
 
-- Registro e inicio de sesión
-- El flujo principal de valor del producto
-- Pago o conversión
-
-No pruebes cada botón en E2E. Es caro y frágil.
-
-## Reglas
-
-- Cada test crea sus propios datos y los limpia.
-- Ningún test depende de otro ni del orden de ejecución.
-- Nada de `sleep()`. Esperas explícitas sobre condiciones.
-- **Nunca** datos reales de producción, ni siquiera "anonimizados a ojo".
-
-## Antes de escribir tests
-
-Lee [`docs/standards/TESTING_STRATEGY.md`](../docs/standards/TESTING_STRATEGY.md)
-y [`.agents/qa.md`](../.agents/qa.md).
-
-El estado actual de la cobertura está en [`.ai/TESTING.md`](../.ai/TESTING.md).
+Estado de la cobertura y huecos conocidos: [`../.ai/TESTING.md`](../.ai/TESTING.md).

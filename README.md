@@ -1,5 +1,20 @@
 # AI Project Starter
 
+> ### 🎬 Esta rama contiene **Juntos**
+>
+> Una app para ver una película a la vez desde dos casas: sincronización
+> automática con YouTube y archivos de vídeo, extensión de escritorio para que
+> Netflix vaya sincronizado de verdad, modo asistido para Netflix en el iPhone, y
+> chat de voz entre los dos.
+>
+> - **Qué es y cómo funciona** → [`docs/JUNTOS.md`](docs/JUNTOS.md)
+> - **Desplegarla en Vercel** → [`docs/runbooks/deployment.md`](docs/runbooks/deployment.md)
+> - **La extensión para Netflix** → [`extension/README.md`](extension/README.md)
+>
+> El resto de este README describe la plantilla sobre la que está construida.
+
+---
+
 > Professional AI software engineering template for Claude Code, Codex and Zoo Code.
 
 Plantilla de proyecto para trabajar con varias IAs sobre el mismo repositorio, con

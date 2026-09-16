@@ -1,0 +1,3 @@
+# Es una sala privada para dos, no una web que quiera visitas.
+User-agent: *
+Disallow: /sala/

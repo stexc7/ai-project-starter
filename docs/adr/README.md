@@ -63,3 +63,4 @@ pwsh scripts/new-adr.ps1 "Usar PostgreSQL como base de datos principal"
 | # | Título | Estado | Fecha |
 |---|--------|--------|-------|
 | [0001](0001-registrar-decisiones-de-arquitectura.md) | Registrar decisiones de arquitectura | Aceptado | 2026-01-01 |
+| [0002](0002-sincronizacion-por-ancla-y-sondeo.md) | Sincronizar con un ancla temporal y sondeo, no con mensajes en vivo | Aceptado | 2026-09-16 |
