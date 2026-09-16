@@ -84,8 +84,9 @@ pantallas que no se hablan.
 | Tecnología | Por qué no |
 |------------|------------|
 | WebSockets / SSE | Las funciones de Vercel son efímeras y la precisión no viaja por el canal de mensajes, sino en el ancla. Ver ADR-0002 |
+| Servidor TURN para la voz | Cuesta dinero y en redes domésticas no hace falta. Si falla, se avisa. Anotado como TASK-013 |
 | Tailwind u otro framework CSS | Dos pantallas. El CSS a mano cabe en un archivo y evita una dependencia de build |
 | Base de datos relacional | El estado es una sala que cabe en un JSON y caduca al mes |
 | Un cliente de Redis (`ioredis`, `@upstash/redis`) | La API REST de Upstash se usa con `fetch` en 40 líneas |
 | NextAuth o cualquier proveedor de identidad | No hay cuentas ni correos. Código de sala y PIN |
-| Extensión de navegador | En iOS no puede tocar el reproductor de Netflix. Ese era el camino de Rave y Teleparty, y es el que no existe aquí |
+| App nativa de iOS | Es el camino que usaba Rave (Netflix incrustado dentro de la app) y el único que sincroniza Netflix en un iPhone. Exige Xcode, un Mac, 99 $/año y pasar revisión — y a Rave, Apple acabó retirándola igualmente |

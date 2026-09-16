@@ -38,24 +38,35 @@ export default function HomePage() {
             <h2>Cómo funciona</h2>
             <ol className="steps">
               <li>
-                Cada uno pone <strong>Netflix en su móvil o su tele</strong>, con el mismo título en
-                pausa.
+                <strong>YouTube o un archivo de vídeo</strong>: pegáis el enlace y ya está. Uno le
+                da al play y al otro le arranca solo.
               </li>
               <li>
-                Esta app cuenta <strong>5, 4, 3, 2, 1</strong> en los dos teléfonos a la vez, con el
-                mismo reloj.
+                <strong>Netflix desde el ordenador</strong>: con nuestra extensión, igual de
+                automático.
               </li>
               <li>
-                Le dais al play en el <strong>¡dale!</strong> y a partir de ahí vais igual, con chat
-                y reacciones.
+                <strong>Netflix desde el iPhone</strong>: la app cuenta <strong>5, 4, 3, 2, 1</strong>{' '}
+                en los dos teléfonos con el mismo reloj, y le dais al play a la vez.
               </li>
             </ol>
-            <p className="faint" style={{ margin: 0 }}>
-              Netflix va cifrado: ninguna web puede reproducirlo por dentro ni mover su reproductor
-              desde fuera (por eso Rave y Teleparty eran extensiones de ordenador, y por eso en el
-              iPhone eso no existe). Lo que sí se puede hacer es que los dos arranquéis en el mismo
-              milisegundo y llevar la cuenta de por dónde vais. Eso es lo que hace esto.
+            <p className="muted" style={{ margin: 0, fontSize: 14.5 }}>
+              Y podéis hablar mientras, sin abrir otra app.
             </p>
+
+            <details className="faint">
+              <summary style={{ cursor: 'pointer' }}>
+                ¿Por qué Netflix en el iPhone es distinto?
+              </summary>
+              <p style={{ marginBottom: 0 }}>
+                Netflix va cifrado: ninguna web puede reproducirlo ni tocar su reproductor desde
+                fuera. Solo se puede desde <strong>dentro</strong> de la página donde vive ese
+                reproductor. Eso es lo que hacía Rave —una app de móvil con Netflix incrustado— y
+                lo que hace Teleparty, que es una extensión de escritorio. Una web no tiene dónde
+                meterse. Así que en el iPhone esta app hace lo único que se puede: sincronizaros a
+                vosotros, al milisegundo.
+              </p>
+            </details>
           </section>
         </>
       ) : (

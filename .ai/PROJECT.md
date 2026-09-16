@@ -11,8 +11,10 @@ al play a la misma película, cada una en su casa y en su propio Netflix.
 
 ## Problema que resuelve
 
-Rave cerró y con él la forma que tenía una pareja a distancia de ver algo a la
-vez desde el iPhone. Las alternativas que quedan no sirven para este caso:
+Rave desapareció —Apple la retiró de la App Store en agosto de 2025— y con ella
+la forma que tenía una pareja a distancia de ver algo a la vez desde el iPhone.
+Rave podía porque era una **app nativa con Netflix incrustado dentro**, algo que
+una web no puede replicar. Las alternativas que quedan no sirven para este caso:
 
 - **Teleparty** es una extensión de Chrome de escritorio. En el iPhone no existe.
 - **Compartir pantalla** por FaceTime o Discord da negro: el DRM lo impide.

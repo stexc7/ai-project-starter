@@ -85,10 +85,13 @@ existiera el chat de voz. Bloquea también al propio sitio. Ahora es
 **Agente:** Claude Code
 **Contexto:** Arranque de Juntos (TASK-005).
 **Aprendido:** El DRM (Widevine/FairPlay) impide incrustar Netflix, tocar su
-reproductor desde otro origen y compartirlo por pantalla. Rave y Teleparty
-funcionaban porque eran **extensiones de escritorio** inyectadas dentro de
-netflix.com; en iOS eso no existe y Netflix solo reproduce en su propia app.
-Por eso Juntos sincroniza a las **personas**, no a los reproductores.
+reproductor desde otro origen y compartirlo por pantalla. Solo se puede desde
+**dentro** de la página donde vive el reproductor: Teleparty lo hace con una
+extensión de escritorio, y **Rave lo hacía siendo una app nativa con Netflix
+incrustado** (te logueabas en Netflix dentro de Rave). Una web no tiene dónde
+meterse, y por eso Juntos sincroniza a las **personas** cuando la fuente va con
+DRM. Ojo: Rave no cerró por lo técnico — Apple la retiró de la App Store en
+agosto de 2025.
 **Aplicar cuando:** Alguien proponga «reproducir Netflix dentro de la app» o un
 iframe. No es difícil: es imposible. El camino legítimo es `extension/`, que se
 mete dentro de la propia página de Netflix — y solo existe en ordenador.
@@ -168,5 +171,6 @@ empuje al resto.
 | Preferencia | Por qué | Desde |
 |-------------|---------|-------|
 | Habla en español, tuteando | Es como escribe él | 2026-09-16 |
-| Prefiere que se le digan los límites reales antes de construir | Preguntó «o qué me recomiendas» sabiendo que Rave cerró | 2026-09-16 |
+| Prefiere que se le digan los límites reales antes de construir | Preguntó «o qué me recomiendas» sabiendo que Rave ya no está | 2026-09-16 |
+| Contrasta lo que se le dice con lo que conoce | Preguntó «¿así funcionaba Rave?» y destapó un error en la documentación | 2026-09-16 |
 | Despliegue en Vercel, coste cero | Lo pidió explícitamente | 2026-09-16 |

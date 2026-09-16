@@ -25,16 +25,32 @@ Netflix va cifrado con **DRM** (Widevine, PlayReady, FairPlay). Eso significa qu
 - No se puede controlar su reproductor desde otra página: es otro origen.
 - No se puede compartir por FaceTime, Zoom o Discord: sale la pantalla en negro.
 
-**Rave y Teleparty no eran webs: eran extensiones y apps de escritorio.** Se
-inyectaban *dentro* de `netflix.com`, y ahí sí se puede tocar el `<video>`. Por
-eso nosotros también tenemos [una extensión](../extension/README.md): es el único
-camino que funciona con Netflix de verdad.
+**Ni Rave ni Teleparty eran webs — y no eran lo mismo entre sí:**
 
-En el iPhone ese camino no existe. Netflix solo reproduce dentro de su propia
-app y ninguna extensión entra ahí. **A Hearo le pasa lo mismo**: en el móvil te
-manda a la app de Netflix y la sincronización se degrada — hay hilos de soporte
-suyos con exactamente esa queja. No es una limitación nuestra, es la frontera
-del DRM.
+- **Teleparty** es una extensión de Chrome de escritorio. Se inyecta dentro de
+  `netflix.com` y desde ahí sí puede tocar el `<video>`.
+- **Rave** era una **app nativa de iPhone y Android con Netflix incrustado
+  dentro**. Te logueabas en Netflix desde la propia Rave y veías su catálogo sin
+  salir de la app. Como el navegador era suyo, podía controlar ese reproductor.
+  Eso es justo lo que ninguna web puede hacer, y por eso Rave sí funcionaba en el
+  móvil.
+
+Las dos hacen el mismo truco desde sitios distintos: **meterse dentro de la
+página donde vive el reproductor.** Por eso nosotros también tenemos
+[una extensión](../extension/README.md) — pero una web, desde fuera, no tiene
+dónde meterse.
+
+Y un detalle que conviene saber: **Rave no cerró por un problema técnico.**
+Apple la retiró de la App Store en agosto de 2025, tras diez años y 73 millones
+de descargas en iOS, citando una cláusula genérica de su acuerdo de
+desarrollador. Rave sostiene que fue por competir con SharePlay y lo está
+litigando en Canadá y Estados Unidos. Es decir: el camino de Rave sigue siendo
+técnicamente posible; lo que desapareció fue el permiso para distribuirlo.
+
+En cuanto a Hearo, **le pasa lo mismo que a nosotros**: en el móvil te manda a
+la app de Netflix y la sincronización se degrada — hay hilos de soporte suyos
+con exactamente esa queja. No es una limitación nuestra, es la frontera del DRM
+para cualquiera que no sea una app nativa.
 
 Así que en iPhone + Netflix, el modo asistido no es un truco barato: es lo único
 que existe. Y con un reloj compartido al milisegundo, funciona.
