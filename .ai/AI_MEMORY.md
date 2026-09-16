@@ -42,6 +42,19 @@ consolida: fusiona entradas repetidas, borra lo que ya no aplica.
 
 ## Entradas
 
+### 2026-09-16 — Netflix en una PWA está bloqueado en tres capas, no en una
+**Agente:** Claude Code
+**Contexto:** El humano insistió: «hazlo como Rave y punto, un PWA que funcione».
+**Aprendido:** No es cuestión de esfuerzo. Netflix manda `X-Frame-Options: DENY`
+(no entra en un iframe), la política de mismo origen impide tocar su `<video>`
+aunque entrara, y el DRM no entrega licencia a un reproductor de terceros. Las
+tres las aplica el navegador. No hay API ni flag. Rodearlo exigiría un proxy que
+reescriba cabeceras y redistribuya contenido cifrado: ni funciona ni se hace.
+**Lo que sí se pudo dar:** archivos propios sincronizados, que era la forma en
+que más se usaba Rave. Cada uno abre su copia, sincronía completa, sin subir nada.
+**Aplicar cuando:** Se vuelva a pedir Netflix dentro de la web. La respuesta útil
+no es «no se puede», es «esto otro sí, y cubre el 80 % de lo que echas de menos».
+
 ### 2026-09-16 — Hearo tampoco puede con Netflix en el móvil
 **Agente:** Claude Code
 **Contexto:** El humano pidió «que funcione como Hearo, no un temporizador».

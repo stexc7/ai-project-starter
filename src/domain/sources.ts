@@ -47,7 +47,60 @@ export const EMPTY_SOURCE: Source = { kind: 'external', ref: '' };
 
 /** `true` si la app puede incrustar y controlar esta fuente por sí misma. */
 export function isEmbeddable(kind: SourceKind): boolean {
-  return kind === 'youtube' || kind === 'video';
+  return kind === 'youtube' || kind === 'video' || kind === 'local';
+}
+
+/** Lo máximo que se acepta como nombre de archivo, para no guardar novelas. */
+const MAX_FILE_NAME = 160;
+
+/**
+ * Fuente para un archivo que cada uno tiene en su dispositivo.
+ *
+ * Es la forma en que más se usaba Rave: los dos abrís vuestra copia de la misma
+ * película y la app las mueve a la vez. **El archivo no viaja a ningún sitio**;
+ * lo único que se comparte es el nombre y el tamaño, para poder avisar si no
+ * estáis abriendo lo mismo.
+ */
+export function localSource(name: unknown, sizeBytes: unknown): Validated<Source> {
+  if (typeof name !== 'string' || name.trim() === '') {
+    return { ok: false, error: 'Falta el nombre del archivo.' };
+  }
+  if (typeof sizeBytes !== 'number' || !Number.isFinite(sizeBytes) || sizeBytes <= 0) {
+    return { ok: false, error: 'Ese archivo no tiene buena pinta.' };
+  }
+
+  // La barra vertical separa los dos campos, así que no puede ir en el nombre.
+  const clean = name.replace(/\|/g, ' ').trim().slice(0, MAX_FILE_NAME);
+  return { ok: true, value: { kind: 'local', ref: `${clean}|${Math.round(sizeBytes)}` } };
+}
+
+export interface LocalFileInfo {
+  name: string;
+  sizeBytes: number;
+}
+
+/** Deshace `localSource`. `null` si la referencia no tiene el formato esperado. */
+export function readLocalSource(source: Source): LocalFileInfo | null {
+  if (source.kind !== 'local') return null;
+
+  const separator = source.ref.lastIndexOf('|');
+  if (separator <= 0) return null;
+
+  const sizeBytes = Number(source.ref.slice(separator + 1));
+  if (!Number.isFinite(sizeBytes) || sizeBytes <= 0) return null;
+
+  return { name: source.ref.slice(0, separator), sizeBytes };
+}
+
+/**
+ * ¿Han abierto los dos el mismo archivo?
+ *
+ * El tamaño en bytes es una huella lo bastante buena: dos descargas distintas de
+ * la misma película no coinciden casi nunca. El nombre se ignora porque cada uno
+ * puede haberlo renombrado.
+ */
+export function sameFile(a: LocalFileInfo, b: LocalFileInfo): boolean {
+  return a.sizeBytes === b.sizeBytes;
 }
 
 /** Nombre del servicio con DRM al que apunta la URL, si lo reconocemos. */

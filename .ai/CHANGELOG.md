@@ -18,6 +18,9 @@ Versionado según [SemVer](https://semver.org/lang/es/).
 ### Añadido
 - **Juntos**: una aplicación web para ver una película a la vez desde dos casas.
   Se instala en el iPhone desde Safari y no necesita cuenta.
+- **Ver una peli que tengáis los dos**, sincronizada de verdad: cada uno abre su
+  copia desde su móvil u ordenador y la app mueve los dos reproductores a la vez.
+  El archivo no se sube a ningún sitio. Si abrís copias distintas, os avisa.
 - **Sincronización automática** con YouTube y con archivos de vídeo: pegas un
   enlace, uno le da al play y al otro le arranca solo. Pausar, adelantar y
   retroceder también se aplican en los dos.

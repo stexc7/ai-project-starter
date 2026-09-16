@@ -40,4 +40,6 @@ export interface PlayerProps {
   events: PlayerEvents;
   /** Se llama cuando el reproductor ya acepta órdenes. */
   onHandle(handle: PlayerHandle | null): void;
+  /** El navegador no puede con este archivo (códec, formato, red…). */
+  onError?(message: string): void;
 }

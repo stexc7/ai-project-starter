@@ -12,12 +12,15 @@ import { useCallback, useEffect, useRef } from 'react';
 
 import type { PlayerProps } from './types';
 
-export function Html5Player({ ref: source, events, onHandle }: PlayerProps) {
+export function Html5Player({ ref: source, events, onHandle, onError }: PlayerProps) {
   const video = useRef<HTMLVideoElement>(null);
   // Se guardan en una referencia para que el `useEffect` de abajo no vuelva a
   // montarse cada vez que el componente padre se repinta.
   const latestEvents = useRef(events);
   latestEvents.current = events;
+
+  const latestError = useRef(onError);
+  latestError.current = onError;
 
   const attach = useCallback(
     (element: HTMLVideoElement | null) => {
@@ -52,14 +55,24 @@ export function Html5Player({ ref: source, events, onHandle }: PlayerProps) {
     const onPause = () => latestEvents.current.onUserPause(element.currentTime);
     const onSeeked = () => latestEvents.current.onUserSeek(element.currentTime);
 
+    const onFailure = () => {
+      // El caso habitual con un archivo propio: un .mkv, o vídeo en un códec que
+      // este navegador no lleva. Safari es el más estricto de todos.
+      latestError.current?.(
+        'Este navegador no puede reproducir ese archivo. Con .mp4 (H.264) funciona en todos.',
+      );
+    };
+
     element.addEventListener('play', onPlay);
     element.addEventListener('pause', onPause);
     element.addEventListener('seeked', onSeeked);
+    element.addEventListener('error', onFailure);
 
     return () => {
       element.removeEventListener('play', onPlay);
       element.removeEventListener('pause', onPause);
       element.removeEventListener('seeked', onSeeked);
+      element.removeEventListener('error', onFailure);
     };
   }, [source]);
 

@@ -56,6 +56,22 @@ export function SourcePicker({ busy, send }: Props) {
     <section className="card stack">
       <h2>¿Qué ponemos?</h2>
 
+      <button
+        className="btn btn--primary btn--big"
+        disabled={busy}
+        onClick={() => void send({ type: 'set-source', file: null })}
+      >
+        Una peli que tengamos
+      </button>
+      <p className="faint" style={{ marginTop: -4 }}>
+        Cada uno abre su copia desde su móvil u ordenador. No se sube nada a ningún sitio, y va
+        sincronizado solo.
+      </p>
+
+      <p className="label" style={{ marginTop: 6 }}>
+        O pegar un enlace
+      </p>
+
       <input
         className="field"
         value={raw}
@@ -75,7 +91,7 @@ export function SourcePicker({ busy, send }: Props) {
       {hint && <p className={`hint hint--${hint.tone}`}>{hint.text}</p>}
 
       <button
-        className="btn btn--primary btn--big"
+        className="btn"
         disabled={busy || raw.trim() === '' || !parsed.ok}
         onClick={() => void submit()}
       >
@@ -93,12 +109,12 @@ export function SourcePicker({ busy, send }: Props) {
       <details className="faint">
         <summary style={{ cursor: 'pointer' }}>¿Por qué no todo va solo?</summary>
         <p style={{ marginBottom: 0 }}>
-          YouTube y los archivos de vídeo se dejan incrustar, así que la app mueve los dos
+          Vuestros archivos y YouTube se dejan controlar, así que la app mueve los dos
           reproductores: uno le da al play y al otro le arranca. Netflix, Prime, Disney+ y HBO van
-          cifrados con DRM y ninguna web puede reproducirlos ni tocar su reproductor — por eso
-          Teleparty es una extensión de ordenador y por eso Hearo, en el móvil, también te manda a
-          la app de Netflix. Ahí esta app hace lo único que se puede hacer: sincronizaros a
-          vosotros, al milisegundo.
+          cifrados, y ninguna web puede reproducirlos ni tocar su reproductor: solo se puede desde{' '}
+          <em>dentro</em> de su propia página. Por eso Teleparty es una extensión de ordenador, y
+          por eso Rave tenía que ser una app nativa. Desde el iPhone, esta app hace lo único que se
+          puede: sincronizaros a vosotros, al milisegundo.
         </p>
       </details>
     </section>

@@ -33,11 +33,20 @@ export interface Anchor {
  *   incrustar ni controlar desde una web, así que ahí la app coordina a las dos
  *   personas en vez de a los dos reproductores.
  */
-export type SourceKind = 'external' | 'youtube' | 'video';
+export type SourceKind = 'external' | 'youtube' | 'video' | 'local';
 
 export interface Source {
   kind: SourceKind;
-  /** Id del vídeo de YouTube, URL del archivo, o cadena vacía si es externa. */
+  /**
+   * Qué identifica a la fuente, según el tipo:
+   *
+   * - `youtube`: el id del vídeo.
+   * - `video`: la URL del archivo.
+   * - `local`: `nombre|tamaño`. **El archivo no se sube a ningún sitio**: cada
+   *   uno abre su propia copia desde su dispositivo y esto solo sirve para que
+   *   la app compruebe que las dos son la misma.
+   * - `external`: la URL del servicio, o vacío.
+   */
   ref: string;
 }
 

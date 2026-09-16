@@ -6,7 +6,8 @@
  */
 
 import { REACTIONS, type RoomAction } from '@/domain/room';
-import { parseSource } from '@/domain/sources';
+import { localSource, parseSource } from '@/domain/sources';
+import type { Source } from '@/domain/types';
 import {
   parseChatText,
   parseEmoji,
@@ -48,7 +49,19 @@ export function parseAction(body: Record<string, unknown>): Validated<RoomAction
     }
 
     case 'set-source': {
-      const source = parseSource(body.url);
+      // Un archivo del propio dispositivo, o un enlace. El archivo nunca se
+      // sube: solo viajan su nombre y su tamaño.
+      let source: Validated<Source>;
+      if (!('file' in body)) {
+        source = parseSource(body.url);
+      } else if (body.file === null) {
+        // Modo archivo, sin elegir todavía: el selector de la sala hace el resto.
+        source = { ok: true, value: { kind: 'local', ref: '' } };
+      } else {
+        const file = body.file as { name?: unknown; sizeBytes?: unknown };
+        source = localSource(file?.name, file?.sizeBytes);
+      }
+
       return source.ok ? { ok: true, value: { type, source: source.value } } : fail(source.error);
     }
 

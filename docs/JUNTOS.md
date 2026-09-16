@@ -13,7 +13,8 @@ cuenten así.
 
 | Modo | Para qué | Qué pasa |
 |------|----------|----------|
-| **Automático** | YouTube, archivos de vídeo | El vídeo va **dentro de la app**. Uno le da al play y al otro le arranca solo. Pausa, salto y corrección de deriva, todo automático |
+| **Vuestros archivos** | Una peli que tengáis los dos | Cada uno abre **su copia** desde su dispositivo. No se sube nada. Sincronización completa y automática. **Es como se usaba Rave de verdad** |
+| **Automático** | YouTube, vídeo por https | El vídeo va **dentro de la app**. Uno le da al play y al otro le arranca solo |
 | **Extensión** | Netflix, Prime, Disney+, Max — **en ordenador** | La extensión se mete dentro de la página del servicio y mueve su reproductor. Lo mismo que Teleparty |
 | **Asistido** | Netflix y compañía — **en el iPhone** | La app no puede tocar el reproductor, así que sincroniza a las dos personas: cuenta atrás al milisegundo y timecode común |
 
@@ -59,7 +60,7 @@ que existe. Y con un reloj compartido al milisegundo, funciona.
 
 | Hace | No hace |
 |------|---------|
-| Mover los dos reproductores (YouTube, vídeo, y Netflix con la extensión) | Reproducir contenido con DRM dentro de la web |
+| Mover los dos reproductores (vuestros archivos, YouTube, y Netflix con la extensión) | Reproducir contenido con DRM dentro de la web |
 | Corregir la deriva sola, sin que nadie toque nada | Saltarse el DRM |
 | Que los dos pulséis play a la vez cuando no queda otra | Guardar contraseñas de Netflix |
 | **Chat de voz**, chat de texto, reacciones y lista de qué ver | Vídeo de vosotros |
@@ -74,12 +75,25 @@ misma cada noche.
 
 Dentro, pegáis un enlace y la app decide sola en qué modo va.
 
-### Con YouTube o un archivo de vídeo — no hay que hacer nada
+### Con una peli que tengáis los dos — lo más parecido a Rave
+
+Pulsáis **Una peli que tengamos** y cada uno abre **su propia copia** desde su
+móvil u ordenador. A partir de ahí: dale al play y al otro le arranca, pausa y
+se para el otro, salta y salta el otro.
+
+El archivo **no se sube a ningún sitio** ni pasa por ningún servidor: se lee del
+disco con `URL.createObjectURL`, que es una referencia local. Lo único que viaja
+a la sala son el nombre y el tamaño, para poder avisaros si no estáis abriendo lo
+mismo (compara por tamaño en bytes: dos descargas distintas no coinciden casi
+nunca).
+
+En iPhone usad **.mp4 con H.264**. Safari no reproduce `.mkv` ni algunos códecs;
+si el archivo no le entra, la app lo dice en vez de quedarse en negro.
+
+### Con YouTube o un vídeo por https — no hay que hacer nada
 
 Pega el enlace, cada uno toca una vez la pantalla (iOS no deja arrancar un vídeo
-sin un toque previo) y ya está: **dale al play y al otro le arranca**. Pausa,
-adelanta o retrocede donde quieras; se aplica en los dos. Si os separáis por lo
-que sea, se corrige solo.
+sin un toque previo) y ya está: **dale al play y al otro le arranca**.
 
 ### Con Netflix en el ordenador — instalad la extensión
 

@@ -24,6 +24,7 @@ import {
   SEEK_STEP_MS,
 } from '@/domain/playback';
 import type { ClientAction } from '@/domain/room';
+import { drmServiceName } from '@/domain/sources';
 import type { RoomCore } from '@/domain/sync';
 import { unlockAudio } from './beeps';
 
@@ -63,6 +64,18 @@ export function SyncStage({ core, now, busy, send }: Props) {
       <p className={`timecode${phase === 'idle' ? ' timecode--idle' : ''}`}>
         {formatTimecode(position)}
       </p>
+
+      {core.source.ref !== '' && (
+        <a
+          className="btn btn--block"
+          href={core.source.ref}
+          target="_blank"
+          rel="noreferrer noopener"
+          style={{ display: 'block', textAlign: 'center', marginBottom: 12 }}
+        >
+          Abrir en {drmServiceName(core.source.ref) ?? 'el servicio'} ↗
+        </a>
+      )}
 
       <p className="stage__hint">
         {phase === 'idle' && 'Abrid Netflix, buscad el título y dejadlo en pausa.'}

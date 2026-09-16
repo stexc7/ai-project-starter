@@ -52,7 +52,9 @@ export type RoomAction =
  */
 export type ClientAction =
   | Exclude<RoomAction, { type: 'set-source' }>
-  | { type: 'set-source'; url: string };
+  | { type: 'set-source'; url: string }
+  /** `null` entra en modo archivo sin elegir todavía. */
+  | { type: 'set-source'; file: { name: string; sizeBytes: number } | null };
 
 export interface ActionContext {
   memberId: string;
