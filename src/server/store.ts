@@ -18,7 +18,22 @@ import type { Room } from '@/domain/types';
 /** Una sala sin actividad durante un mes se borra sola. */
 const ROOM_TTL_SECONDS = 60 * 60 * 24 * 30;
 /** Reintentos ante colisión de escritura antes de rendirse. */
-const MAX_CAS_RETRIES = 5;
+const MAX_CAS_RETRIES = 8;
+
+/**
+ * Espera entre reintentos, creciente y con azar.
+ *
+ * Reintentar de inmediato hace que los que acaban de chocar vuelvan a chocar, a
+ * la vez y otra vez. El azar los separa; sin él, dos escrituras simultáneas se
+ * persiguen hasta agotar los intentos. Pasa de verdad al negociar la llamada de
+ * voz, que manda varios candidatos ICE casi a la vez.
+ */
+function retryDelayMs(attempt: number): number {
+  const base = 8 * 2 ** attempt;
+  return Math.round(base * (0.5 + Math.random()));
+}
+
+const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export type UpdateResult =
   | { ok: true; room: Room }
@@ -118,6 +133,8 @@ class UpstashRoomStore implements RoomStore {
       ]);
 
       if (applied === 1) return { ok: true, room: next };
+
+      await wait(retryDelayMs(attempt));
     }
 
     return { ok: false, reason: 'conflict' };

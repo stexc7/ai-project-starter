@@ -42,6 +42,27 @@ consolida: fusiona entradas repetidas, borra lo que ya no aplica.
 
 ## Entradas
 
+### 2026-09-17 — El almacén en memoria oculta las carreras de escritura
+**Agente:** Claude Code
+**Contexto:** Al verificar el despliegue se probó por primera vez el camino de
+Upstash, contra un doble local de su API REST.
+**Aprendido:** El almacén en memoria es síncrono: no puede haber colisiones, así
+que todos los tests pasaban. Con Redis sí las hay, y el compare-and-set
+reintentaba **cinco veces seguidas sin esperar**: los que chocaban volvían a
+chocar. De 30 escrituras simultáneas se perdían 5. Arreglado con espera creciente
+y aleatoria (8 intentos). Importa de verdad en la negociación de la llamada de
+voz, que manda varios candidatos ICE casi a la vez.
+**Aplicar cuando:** Se toque `src/server/store.ts`, o se añada cualquier cosa que
+escriba en ráfaga. El test `tests/store-upstash.test.ts` lo cubre ahora.
+
+### 2026-09-17 — La portada carga aunque falten las variables de entorno
+**Agente:** Claude Code
+**Contexto:** Verificación del despliegue en Vercel.
+**Aprendido:** `/` es estática y no toca el almacén, así que responde 200 sin
+`UPSTASH_*` ni `SESSION_SECRET`. El fallo solo aparece al **crear o entrar en una
+sala** (500, con el motivo en los logs de Vercel). Ver la portada no prueba nada.
+**Aplicar cuando:** Alguien diga «la app carga, así que las variables están bien».
+
 ### 2026-09-16 — Netflix en una PWA está bloqueado en tres capas, no en una
 **Agente:** Claude Code
 **Contexto:** El humano insistió: «hazlo como Rave y punto, un PWA que funcione».

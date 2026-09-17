@@ -71,10 +71,21 @@ descubran a mitad de película que no se ven.
 
 ## 4. Comprobar que funciona
 
+> **Que cargue la portada no prueba nada.** La página de inicio es estática y no
+> toca la base de datos: responde bien aunque falten las tres variables. El fallo
+> solo sale al **crear una sala**.
+
 ```bash
-# El reloj responde
+# 1. El reloj responde
 curl https://TU-APP.vercel.app/api/time
 # → {"serverMs":1789535348796}
+
+# 2. Esta es la buena: crear una sala toca Redis y la firma de sesión.
+curl -X POST https://TU-APP.vercel.app/api/rooms \
+  -H 'Content-Type: application/json' \
+  -d '{"name":"prueba","emoji":"🐻","pin":"1234"}'
+# → {"code":"ABC234","serverMs":...}     bien
+# → error 500                            falta alguna variable: míralo en los logs de Vercel
 ```
 
 Y luego, con los dos móviles:

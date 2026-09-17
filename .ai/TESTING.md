@@ -30,7 +30,8 @@ navegador, ni servidor, ni red. Eso es consecuencia directa de la regla de
 | `reconcile.test.ts` | El corrector de deriva: zona muerta, ajuste de velocidad, saltos y convergencia | 11 |
 | `sources.test.ts` | Clasificar enlaces: YouTube, archivos, DRM, esquemas peligrosos | 14 |
 | `extension-sync.test.ts` | Que `extension/sync.js` no se separe de `domain/playback.ts` | 5 |
-| | **Total** | **103** |
+| `store-upstash.test.ts` | El camino de Redis: colisiones de escritura, reintentos, sala inexistente, que el token no se filtre en los errores | 6 |
+| | **Total** | **116** |
 
 Lo que se prueba es lo que duele si se rompe: **la sincronización** (si falla,
 la app no sirve para nada) y **la seguridad** (si falla, cualquiera entra en la
@@ -41,7 +42,7 @@ sala). Los componentes de React son casi todos presentación sobre esa lógica.
 | Hueco | Por qué | Riesgo |
 |-------|---------|--------|
 | Sin tests de navegador automatizados | Se validó a mano con Playwright: dos «teléfonos» en la misma sala, la llamada de voz con micrófonos falsos, y la extensión cargada en Chromium contra un `netflix.com` interceptado | Una regresión de integración no la ve el CI. Es TASK-010 |
-| `src/server/store.ts` contra Upstash de verdad | Haría falta una base de datos en el CI | El camino de memoria sí está ejercitado; el de Redis se validó a mano |
+| `src/server/store.ts` contra Upstash de verdad | Haría falta una base de datos en el CI | Cubierto con un doble de su API REST, en test y a mano contra un servidor local que implementa su protocolo. Falta probarlo contra Upstash real |
 | `useRoom` y `useServerClock` | Son hooks: necesitarían entorno de DOM y temporizadores falsos | La lógica que contienen (`mergeDelta`, `estimateClock`) sí está probada, que es donde están los errores |
 
 ## Tests frágiles
@@ -61,6 +62,8 @@ Con dos navegadores independientes contra el servidor de desarrollo:
 | Deriva forzada de 2,9 s | Corregida a 0,15 s en 1,4 s |
 | Llamada de voz | Conecta en ~3 s, audio en los dos sentidos |
 | Extensión en un `netflix.com` interceptado | Play desde la web arranca el reproductor; pausar en el reproductor lo refleja la web |
+| Build de producción contra un Upstash local | Crear, entrar, chat, archivos sincronizados y llamada de voz, todo correcto |
+| 30 escrituras simultáneas | 0 perdidas (antes del arreglo se perdían 5) |
 
 ## Qué validar a mano antes de dar algo por hecho
 
